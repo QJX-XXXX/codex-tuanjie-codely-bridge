@@ -1,0 +1,16 @@
+{
+  "name": "CodexCodelySetup.Editor",
+  "rootNamespace": "QJX.CodexTuanjieBridge.Editor",
+  "references": [],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

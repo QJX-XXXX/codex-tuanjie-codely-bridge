@@ -1,0 +1,14 @@
+{
+  "name": "cn.qjx.codex-codely-setup",
+  "version": "0.1.0",
+  "displayName": "Codex Codely Setup for Tuanjie",
+  "description": "Configures Codex to use CodelyCLI and Codely Bridge with Tuanjie Editor projects.",
+  "unity": "2022.3",
+  "documentationUrl": "https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge",
+  "licensesUrl": "https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/blob/main/LICENSE",
+  "keywords": ["tuanjie", "codex", "codely", "mcp"],
+  "author": {
+    "name": "QJX-XXXX",
+    "url": "https://github.com/QJX-XXXX"
+  }
+}
