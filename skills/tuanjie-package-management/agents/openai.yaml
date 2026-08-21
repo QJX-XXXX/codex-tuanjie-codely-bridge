@@ -1,0 +1,11 @@
+interface:
+  display_name: "Tuanjie Package Management"
+  short_description: "Manage Tuanjie packages and verify resolved versions safely"
+  default_prompt: "Use $tuanjie-package-management to inspect and safely apply this Tuanjie package change, then verify the resolved version."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "tuanjie"
+      description: "CodelyCLI MCP server connected to the target Tuanjie Editor project"
+policy:
+  allow_implicit_invocation: true
