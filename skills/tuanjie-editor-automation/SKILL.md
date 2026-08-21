@@ -21,8 +21,11 @@ description: Use when a Tuanjie Editor project needs safe Scene, Prefab, GameObj
 
 ## 选择参考
 
+- 需要选择 Codely 工具、核对状态或确认 API 事实来源：读取 [references/tool-discovery-and-routing.md](references/tool-discovery-and-routing.md)。
 - Scene、GameObject、组件、Prefab、ScriptableObject、材质或 Importer：读取 [references/object-workflows.md](references/object-workflows.md)。
+- 批量创建/修改、超大 Scene 或大量资源搜索：读取 [references/batch-and-large-scene-workflows.md](references/batch-and-large-scene-workflows.md)。
 - 新增/修改 C# 后要附加组件或调用新类型：读取 [references/script-compile-workflows.md](references/script-compile-workflows.md)。
+- UI、相机、材质、灯光、布局或其他视觉结果验收：读取 [references/visual-and-runtime-verification.md](references/visual-and-runtime-verification.md)。
 - 调用超时、返回失败、可能部分成功或需要重试：读取 [references/failure-recovery.md](references/failure-recovery.md)。
 
 ## 修改契约
