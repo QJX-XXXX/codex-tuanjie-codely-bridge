@@ -1,5 +1,7 @@
 # 安装与设置
 
+本流程用于让 Codex 直接连接团结 Editor，不要求使用 TuanjieAI。它只覆盖团结 Editor + Codely Bridge；Unity 官方 Editor 项目请使用对应的 Unity MCP 工作流。
+
 ## 1. 准备团结项目
 
 确认项目根包含 Assets、Packages 和 ProjectSettings，ProjectVersion.txt 同时有团结版本字段，并在 Package Manager 安装 cn.tuanjie.codely.bridge。打开该项目的团结 Editor，确认 Bridge 已连接。

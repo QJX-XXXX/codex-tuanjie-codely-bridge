@@ -1,11 +1,11 @@
 ---
 name: tuanjie-codely-bridge
-description: Use when a Tuanjie Editor project needs Codely Bridge, CodelyCLI, or tuanjie MCP setup, diagnostics, or Editor automation; do not use for Unity official Editor projects.
+description: Use when a Tuanjie Editor project needs a Codex-based alternative to TuanjieAI through Codely Bridge, CodelyCLI, or tuanjie MCP setup, diagnostics, or Editor automation; do not use for Unity official Editor projects.
 ---
 
 # Tuanjie Codely Bridge
 
-这个 Skill 只覆盖“团结 Editor + Codely Bridge + CodelyCLI/tuanjie MCP”链路。核心契约是：
+这个 Skill 让 Codex 走“团结 Editor + Codely Bridge + CodelyCLI/tuanjie MCP”链路，提供 TuanjieAI 之外的本地 Agent 工作路径。它只覆盖该链路，不替换团结 Editor 或 Codely Bridge。核心契约是：
 
 **先确认状态和目标项目 → 选择已验证工具 → 最小动作 → 重新读取 → 保存/测试确认。**
 

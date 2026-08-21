@@ -2,7 +2,7 @@
   "name": "cn.qjx.codex-codely-setup",
   "version": "0.1.0",
   "displayName": "Codex Codely Setup for Tuanjie",
-  "description": "Configures Codex to use CodelyCLI and Codely Bridge with Tuanjie Editor projects.",
+  "description": "Provides a Codex-based alternative to TuanjieAI for Tuanjie Editor projects through CodelyCLI and Codely Bridge.",
   "unity": "2022.3",
   "documentationUrl": "https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge",
   "licensesUrl": "https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/blob/main/LICENSE",

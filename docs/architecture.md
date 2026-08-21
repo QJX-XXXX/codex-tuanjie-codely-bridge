@@ -1,5 +1,9 @@
 # 架构说明
 
+## 项目定位
+
+本仓库面向选择 Codex 的团结项目团队，提供一条不依赖 TuanjieAI 的本地 Editor 连接路径。Codex 负责 Agent 交互，CodelyCLI 和 Codely Bridge 负责把 MCP 请求送入团结 Editor；团结 Editor 仍是项目运行和资源状态的事实来源。
+
 ## 连接链路
 
     Codex

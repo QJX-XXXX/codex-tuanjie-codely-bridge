@@ -1,6 +1,10 @@
 # Codex + Tuanjie + Codely Bridge
 
-这个仓库提供一套可复用的团结 Editor 工作流：Codex 通过 CodelyCLI 的 MCP stdio 入口，经 Codely Bridge 连接当前团结项目。它包含 PowerShell 配置脚本、EditorWindow UPM 包、Codex Skill 和 Agent 提示。
+这个仓库的目的，是让选择 Codex 的团队可以不依赖 TuanjieAI，直接通过 CodelyCLI 的 MCP stdio 入口和 Codely Bridge 连接团结 Editor。它提供一套可复用的团结 Editor 工作流，包含 PowerShell 配置脚本、EditorWindow UPM 包、Codex Skill 和 Agent 提示。
+
+## 项目定位
+
+这是“Codex + 团结 Editor”的本地连接方案，作为 TuanjieAI 之外的工作路径；它不替换团结 Editor 或 Codely Bridge，也不适用于 Unity 官方 Editor 项目。
 
 ## 适用边界
 
