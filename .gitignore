@@ -1,0 +1,15 @@
+# Unity generated files
+**/Library/
+**/Temp/
+**/Logs/
+**/obj/
+**/Build/
+**/Builds/
+**/UserSettings/
+
+# Local validation artifacts
+artifacts/
+*.log
+*.xml
+*.bak
+*.tmp
