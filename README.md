@@ -24,17 +24,17 @@
 
 | 客户端 | 项目级入口 | 推荐方式 |
 |---|---|---|
-| Codex | `.codex/config.toml` | 使用 EditorWindow 或 PowerShell 生成 |
+| Codex | `.codex/config.toml` | 单项目使用 EditorWindow；PowerShell 仅用于批量/脚本化/CI |
 | Claude Code | `.mcp.json` | `claude mcp add --scope project` 或手工 JSON |
 | Qoder | MCP 设置页 | 添加本地 STDIO server，粘贴通用 JSON |
 | Cursor | `.cursor/mcp.json` | 使用项目配置文件后刷新 MCP 设置 |
 | WorkBuddy | `.workbuddy/mcp.json` | 使用项目配置文件后在 MCP 页面刷新 |
 
-所有配置都必须把 `--unity-project-path` 指向当前项目的规范化绝对路径。四个平台的完整示例、状态判断和安全边界见 [多 Agent 配置](docs/agent-configurations.md)。
+所有配置都必须把 `--unity-project-path` 指向当前项目的规范化绝对路径。五个客户端都要安装 Skills，所有团结项目都要安装 EditorWindow；各客户端的完整示例、状态判断和安全边界见 [多 Agent 配置](docs/agent-configurations.md)。
 
 ## Skills 套件
 
-推荐安装全部五个 Skill，让入口能够按任务自动分流：
+Codex、Claude Code、Cursor、Qoder 和 WorkBuddy/CodeBuddy 都安装全部五个 Skill，让入口能够按任务自动分流：
 
 | Skill | 负责内容 |
 |---|---|
@@ -44,7 +44,7 @@
 | `tuanjie-package-management` | 团结包查询、安装、升级、移除和解析版本验收 |
 | `tuanjie-codely-custom-tools` | Bridge 自定义工具 API 核对、注册、发现和调用 |
 
-可以只安装一个专项 Skill；它仍会执行自己的项目根、引擎类型和实际 schema 闸门，但不会自动获得其他专项能力。安装地址和 Agent 主导接入提示见 [安装与设置](docs/setup-guide.md)。
+Skill 分别安装到客户端的用户级目录：Codex 使用 `~/.codex/skills/`，Claude Code 使用 `~/.claude/skills/`，Cursor 使用 `~/.cursor/skills/`，Qoder 使用 `~/.qoder/skills/`，WorkBuddy/CodeBuddy 使用 `~/.codebuddy/skills/`。安装地址和通用 Agent 接入提示见 [安装与设置](docs/setup-guide.md)。
 
 典型任务会自动路由：
 
@@ -61,10 +61,10 @@
 
 1. 安装与项目版本匹配的团结 Editor。
 2. 按[官方 Codely Bridge 安装流程](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)安装与 Editor 版本匹配的 Codely Bridge，并打开目标团结项目。
-3. 安装 Node.js LTS、CodelyCLI，并准备好 `codely.cmd` 的绝对路径。
+3. 安装 Node.js LTS，并通过 npm 全局安装 CodelyCLI；确保 `codely.cmd` 可从 `PATH` 找到。接入时由 Agent 自动解析其绝对路径，只有自动解析失败时才需要用户提供。
 4. 安装至少一个支持本地 MCP STDIO 的 Agent，并在其中打开并信任当前项目目录。
 
-完整安装、Agent 主导接入、EditorWindow、PowerShell、各客户端配置和验证步骤见[安装与设置](docs/setup-guide.md)。普通用户只需按 GitHub 子路径安装 Skill 套件和 EditorWindow UPM 包，不需要克隆或下载整个仓库。
+完整安装、通用 Agent 接入提示、EditorWindow、PowerShell、各客户端配置和验证步骤见[安装与设置](docs/setup-guide.md)。普通用户只需按 GitHub 子路径安装 Skill 套件和 EditorWindow UPM 包，不需要克隆或下载整个仓库。
 
 ## Agent 规则
 
