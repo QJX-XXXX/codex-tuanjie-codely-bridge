@@ -6,7 +6,7 @@
 
 以下项目外部条件需要先准备好，Agent 不会替你安装或修复：
 
-1. 安装与项目版本匹配的团结 Editor，并确认项目根包含 `Assets`、`Packages`、`ProjectSettings`，`ProjectVersion.txt` 包含团结版本字段。
+1. 安装与项目版本匹配的团结 Editor，并用它创建或打开目标项目；确认项目根包含 `Assets`、`Packages`、`ProjectSettings`，且 `ProjectVersion.txt` 包含团结版本字段。
 2. 按[官方 Codely Bridge 安装流程](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)在团结 Package Manager 安装与 Editor 版本匹配的 `cn.tuanjie.codely.bridge`，然后打开目标团结项目；Bridge 会随 Editor 自动加载并初始化，无需单独启动 Bridge。
 3. 安装 Node.js LTS（自带 npm），在 PowerShell 安装 CodelyCLI：
 
@@ -33,7 +33,7 @@ EditorWindow 安装示例：在团结 Editor（Unity 风格界面）打开 `Wind
 
 等待包导入、编译和 Domain Reload 完成，再打开 `Window/Tuanjie Codely Agent Setup`。这个包只提供设置窗口，不会自动安装或替换 Codely Bridge。
 
-Codely Bridge 请按[官方安装流程](https://codely-docs.tuanjie.cn/using-codely/codely-bridge-installation-guide/)操作：打开 Package Manager，在 **Tuanjie Registry** 搜索 `Tuanjie AI`，安装 `Codely Bridge`，然后重新读取窗口状态。官方流程没有提供可通用复制的 Bridge Git URL，不要自行猜测包地址。
+Codely Bridge 请按[官方安装流程](https://codely-docs.tuanjie.cn/using-codely/codely-bridge-installation-guide/)操作：打开 Package Manager，在 **Tuanjie Registry** 搜索 `Codely Bridge` 或 `Tuanjie AI`，安装 `Codely Bridge`，然后重新读取窗口状态。
 
 按窗口顺序操作：
 
@@ -56,25 +56,20 @@ Agent 必须分别说明：
 - `tuanjie` MCP 的注册状态、实际只读检查和项目根比较是否完成；
 - 没有执行的验证或需要用户手动完成的步骤。
 
-## 3. EditorWindow 安装（所有团结项目必装）
+## 3. EditorWindow 操作说明
 
-Agent 主导流程会自动完成此步骤；手动接入时按下面步骤安装。EditorWindow 是本仓库对团结项目的统一状态和配置入口，Codex、Claude Code、Cursor、Qoder 和 WorkBuddy 都要安装。
+完成上一节的 Git URL 安装后，打开 `Window/Tuanjie Codely Agent Setup`。UPM 包 ID 是 `cn.qjx.codex-codely-setup`；也可以在仓库开发场景中将 `editor-package` 作为本地 UPM 包引用。
 
-1. 在团结 Package Manager 选择 **Add package from git URL**，使用：
-
-       https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge.git?path=/editor-package
-
-   也可以将 `editor-package` 作为本地 UPM 包引用。
-2. 打开 `Window/Tuanjie Codely Agent Setup`。UPM 包 ID 是 `cn.qjx.codex-codely-setup`。
-3. 选择 Client；保持默认“用户级全局（单项目）”，或者在需要多个团结项目同时使用时切换到“当前项目”。
-4. 点击“重新读取”检查项目、Bridge、CodelyCLI 和现有 `tuanjie` 状态，再点击“预览配置”。
-5. 点击“安装/更新 Skills”安装五个 Skill；确认目标路径和唯一变更后，点击底部宽按钮“配置客户端”。已有条目只改变 `--unity-project-path` 后面的路径；缺少条目时才新增最小配置。
+1. 选择 Client；保持默认“用户级全局（单项目）”，或者在需要多个团结项目同时使用时切换到“当前项目”。
+2. 点击“重新读取”检查项目、Bridge、CodelyCLI、Skills 和现有 `tuanjie` 状态。
+3. 点击“安装/更新 Skills”安装五个 Skill，再点击“预览配置”。
+4. 确认目标路径和唯一变更后，点击底部宽按钮“配置客户端”。已有条目只改变 `--unity-project-path` 后面的路径；缺少条目时才新增最小配置。
 
 窗口支持 Codex、Claude Code、Cursor、Qoder 和 WorkBuddy。它不安装 Bridge，不读取 descriptor 内容，也不启动 CodelyCLI 常驻服务。普通单项目接入不需要再运行 PowerShell。
 
-## 4. 手动安装全局 Skills（所有 Agent）
+## 4. 手动安装全局 Skills（回退）
 
-五个客户端都安装相同的五个 Skill；区别只是用户级目录和客户端的 reload/重启方式：
+正常流程使用 EditorWindow 的“安装/更新 Skills”。只有窗口无法访问 GitHub、客户端未识别或需要人工恢复时，才按下面的用户级目录手动安装；五个客户端都使用相同的五个 Skill：
 
 | 客户端 | 用户级 Skill 根目录 |
 |---|---|
@@ -84,7 +79,7 @@ Agent 主导流程会自动完成此步骤；手动接入时按下面步骤安�
 | Qoder | `~/.qoder/skills/` |
 | WorkBuddy | `~/.codebuddy/skills/` |
 
-优先使用当前客户端官方 Skill 安装器；否则从以下 GitHub 子路径逐个获取并放入对应根目录，不要克隆整个仓库，也不要把仓库根或整个 `skills` 目录当作一个 Skill：
+手动回退时优先使用当前客户端官方 Skill 安装器；否则从以下 GitHub 子路径逐个获取并放入对应根目录，不要克隆整个仓库，也不要把仓库根或整个 `skills` 目录当作一个 Skill：
 
     https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-workflows
     https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-codely-bridge
@@ -131,6 +126,7 @@ Agent 主导流程会自动完成此步骤；手动接入时按下面步骤安�
 2. Codex 在项目根执行 `codex mcp list`；Claude Code、Qoder、Cursor、WorkBuddy 使用各自的 MCP 列表或设置页确认 `tuanjie` 已注册。这只是配置检查，不等同于实际工具调用成功。
 3. 确认当前客户端已经发现五个 Skill，再通过 `tuanjie-workflows` 路由到相应专项 Skill；连接任务必须先做只读项目根核对，Scene/Prefab/组件任务必须按读取 → 最小动作 → 重读 → 保存 → 再读闭环执行。
 4. 如果 Editor 正在导入、编译、Domain Reload 或切换 Play Mode，先等待稳定，再进行 MCP 调用。
+5. 在可回滚的测试场景中发送提示词：“使用 `tuanjie` MCP，在原点放一个立方体，并新建脚本让它自动旋转。”然后检查 Scene、脚本编译和运行结果。
 
 当前 Agent 首次调用 `tuanjie` MCP 时，会按项目配置自动启动 `codely.cmd serve unity-mcp --stdio`；服务由 Agent 会话管理，不需要手动运行长期驻留服务。部分客户端仍需要在设置页刷新或启用条目，这只是客户端状态确认，不是启动 Bridge 的额外步骤。
 

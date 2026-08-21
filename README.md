@@ -40,7 +40,7 @@
 
 等待包导入、编译和 Domain Reload 完成后，打开 `Window/Tuanjie Codely Agent Setup`。这个包只提供设置窗口，不会替你安装或替换 Codely Bridge。
 
-Codely Bridge 本身按[官方安装流程](https://codely-docs.tuanjie.cn/using-codely/codely-bridge-installation-guide/)在 Package Manager 的 **Tuanjie Registry** 中搜索并安装 `Codely Bridge`；官方流程没有给出可通用复制的 Git URL，因此不要猜测或编造 Bridge 地址。官方文档说明的步骤是：打开 Package Manager，搜索 `Tuanjie AI`，安装 `Codely Bridge`，然后让 Bridge 随 Editor 加载。
+Codely Bridge 本身按[官方安装流程](https://codely-docs.tuanjie.cn/using-codely/codely-bridge-installation-guide/)在 Package Manager 的 **Tuanjie Registry** 中搜索并安装；可搜索 `Codely Bridge` 或 `Tuanjie AI`。官方流程没有给出可通用复制的 Git URL，因此不要猜测或编造 Bridge 地址。安装后 Bridge 会随 Editor 加载和初始化。
 
 ## Skills 套件
 
@@ -54,7 +54,7 @@ Codex、Claude Code、Cursor、Qoder 和 WorkBuddy 都安装全部五个 Skill�
 | `tuanjie-package-management` | 团结包查询、安装、升级、移除和解析版本验收 |
 | `tuanjie-codely-custom-tools` | Bridge 自定义工具 API 核对、注册、发现和调用 |
 
-Skill 分别安装到客户端的用户级目录：Codex 使用 `~/.codex/skills/`，Claude Code 使用 `~/.claude/skills/`，Cursor 使用 `~/.cursor/skills/`，Qoder 使用 `~/.qoder/skills/`，WorkBuddy 使用其官方兼容目录 `~/.codebuddy/skills/`。打开 EditorWindow 后，点击“安装/更新 Skills”即可安装或更新五个 Skill；手动路径和刷新规则见[安装与设置](docs/setup-guide.md)。
+Skill 分别安装到客户端的用户级目录：Codex 使用 `~/.codex/skills/`，Claude Code 使用 `~/.claude/skills/`，Cursor 使用 `~/.cursor/skills/`，Qoder 使用 `~/.qoder/skills/`，WorkBuddy 使用其官方兼容目录 `~/.codebuddy/skills/`。打开 EditorWindow 后，点击“安装/更新 Skills”即可安装或更新五个 Skill；手动路径和刷新规则见[客户端参考与手动回退](docs/agent-configurations.md)。
 
 典型任务会自动路由：
 

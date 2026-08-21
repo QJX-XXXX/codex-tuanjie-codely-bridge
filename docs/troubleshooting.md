@@ -40,7 +40,7 @@
 
 ## Bridge 缺失
 
-窗口只会显示缺失并打开 Package Manager 入口。按项目实际团结版本安装 cn.tuanjie.codely.bridge，等待导入和连接，再重新读取状态。工具不会自动改 Packages/manifest.json。
+窗口只会显示缺失并打开 Package Manager 入口。按项目实际团结版本安装 `cn.tuanjie.codely.bridge`，等待包解析、导入和 Domain Reload 完成，再重新读取状态。工具不会自动改 `Packages/manifest.json`。
 
 ## MCP 根路径不一致
 
@@ -60,7 +60,7 @@ PowerShell 更新 Codex 项目 TOML 时需要 `-Force`。EditorWindow 对所有�
 
 ## 专项 Skill 未安装
 
-先确认请求属于哪个 Skill：`tuanjie-codely-bridge` 负责连接，`tuanjie-editor-automation` 负责对象/脚本，`tuanjie-package-management` 负责包，`tuanjie-codely-custom-tools` 负责自定义工具。缺少对应目录时，从 README 或设置指南中的 GitHub 子路径安装；不要让入口 Skill 猜测专项流程，也不要克隆整个仓库。
+先确认请求属于哪个 Skill：`tuanjie-codely-bridge` 负责连接，`tuanjie-editor-automation` 负责对象/脚本，`tuanjie-package-management` 负责包，`tuanjie-codely-custom-tools` 负责自定义工具。缺少对应目录时，先在 EditorWindow 选择当前客户端并点击“安装/更新 Skills”；窗口不可用时再按[客户端参考与手动回退](agent-configurations.md)处理。不要让入口 Skill 猜测专项流程，也不要克隆整个仓库。
 
 ## Skill 已复制但当前会话没有新能力
 
