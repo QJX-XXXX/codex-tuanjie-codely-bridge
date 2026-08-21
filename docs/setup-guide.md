@@ -4,15 +4,22 @@
 
 ## 1. 准备团结项目
 
-确认项目根包含 Assets、Packages 和 ProjectSettings，ProjectVersion.txt 同时有团结版本字段，并在 Package Manager 安装 cn.tuanjie.codely.bridge。打开该项目的团结 Editor，确认 Bridge 已连接。
+确认项目根包含 Assets、Packages 和 ProjectSettings，ProjectVersion.txt 同时有团结版本字段，并在 Package Manager 安装 cn.tuanjie.codely.bridge。打开 `Window/Tuanjie Codex Setup` 点击“刷新状态”，看到“Codely Bridge=已安装”和“Bridge descriptor=已存在”，且 Bridge 窗口显示 Connected/Ready，即可判断连接正常。
 
 Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill 或 tuanjie MCP。
 
 ## 2. 准备 CodelyCLI
 
-安装 CodelyCLI 后记下 codely.cmd 的绝对路径。先在 PowerShell 中运行：
+先安装 Node.js LTS（自带 npm），在 PowerShell 中运行以下命令安装 CodelyCLI：
 
-    & "C:\Tools\CodelyCLI\codely.cmd" --version
+    npm install -g @unity-china/codely-cli
+
+安装完成后，用下面的命令找到 codely.cmd 的绝对路径并验证版本：
+
+    $cli = (Get-Command codely.cmd -ErrorAction Stop).Source
+    & $cli --version
+
+记录 `$cli` 输出的绝对路径，供 EditorWindow 或 PowerShell 配置入口使用。也可以参考 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。
 
 然后按 CodelyCLI 实际帮助确认 serve unity-mcp --stdio 支持的参数。项目路径必须使用目标团结项目的规范化绝对路径。
 

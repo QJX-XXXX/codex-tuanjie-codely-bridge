@@ -22,8 +22,8 @@ Codex → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 ## 前置条件
 
 1. 安装与项目版本匹配的团结 Editor。
-2. 在团结 Package Manager 安装 Codely Bridge，并确认项目能连接。
-3. 安装 CodelyCLI，并知道 codely.cmd 的绝对路径。
+2. 在团结 Package Manager 安装 Codely Bridge；打开 `Window/Tuanjie Codex Setup` 点击“刷新状态”，看到“Codely Bridge=已安装”和“Bridge descriptor=已存在”，且 Bridge 窗口显示 Connected/Ready，即可判断连接正常。
+3. 先安装 Node.js LTS（自带 npm），在 PowerShell 执行 `npm install -g @unity-china/codely-cli` 安装 CodelyCLI；再执行 `$cli = (Get-Command codely.cmd -ErrorAction Stop).Source; & $cli --version`，把 `$cli` 输出的绝对路径填入 EditorWindow 或配置脚本。更多安装背景见 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。
 4. 在 Codex 中打开并信任当前项目目录。
 
 ## 快速设置（首次使用）
@@ -78,8 +78,19 @@ Codex → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 - [只读连接检查](prompts/readonly-connection-check.md)
 - [写入冒烟测试](prompts/write-smoke-test.md)
 - [连接诊断](prompts/diagnose-connection.md)
-- [Agent 自动设置本地连接](docs/agent-setup-guide.md)
 - [团结规则片段](templates/AGENTS.tuanjie-snippet.md)
+
+## Agent 自动设置本地连接
+
+安装 `tuanjie-codely-bridge` Skill 后，在当前团结项目根把下面的提示发送给 Codex：
+
+    请使用 $tuanjie-codely-bridge，在当前工作区完成当前项目的本地 Codely Bridge MCP 配置。
+
+    约束：只写当前项目的 .codex/config.toml，不修改用户级全局配置；如果当前是 Unity 官方 Editor、Bridge 未连接、CodelyCLI 无法验证或 MCP 根路径不一致，立即停止；不要安装 Bridge、修改 Packages/manifest.json、启动长期运行的服务，也不要输出 token、端口或 descriptor 内容。
+
+    请确认团结 Editor、Bridge 和项目绝对路径，定位 codely.cmd 并运行 --version；只合并 mcp_servers.tuanjie，已有配置先备份为 config.toml.bak；然后运行 codex mcp list，重新读取配置并报告项目路径、CLI 版本、Bridge 状态、MCP 根路径、备份和未完成验证。
+
+Agent 只负责当前项目的本地连接配置，不会替代 Bridge 安装或 EditorWindow 导入；完整约束与完成标准见仓库内的 `docs/agent-setup-guide.md`。
 
 ## 验证
 
