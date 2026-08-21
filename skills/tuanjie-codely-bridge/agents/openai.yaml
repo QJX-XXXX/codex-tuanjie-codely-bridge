@@ -1,7 +1,7 @@
 interface:
   display_name: "Tuanjie Codely Bridge"
-  short_description: "Set up and diagnose Codex connections to Tuanjie Editor"
-  default_prompt: "Use $tuanjie-codely-bridge to verify this Tuanjie project and its Codely connection."
+  short_description: "Set up and diagnose Agent connections to Tuanjie Editor"
+  default_prompt: "Use $tuanjie-codely-bridge to verify this Tuanjie project and its Codely MCP connection."
 dependencies:
   tools:
     - type: "mcp"

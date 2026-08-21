@@ -2,7 +2,7 @@
 
 ## 项目定位
 
-本仓库面向选择 Codex 的团结项目团队，提供一条不依赖 TuanjieAI 的本地 Editor 连接路径。Codex 负责 Agent 交互，CodelyCLI 和 Codely Bridge 负责把 MCP 请求送入团结 Editor；团结 Editor 仍是项目运行和资源状态的事实来源。
+本仓库面向使用不同 MCP Agent 的团结项目团队，提供一条不依赖 TuanjieAI 的本地 Editor 连接路径。Agent 负责交互，CodelyCLI 和 Codely Bridge 负责把 MCP 请求送入团结 Editor；团结 Editor 仍是项目运行和资源状态的事实来源。
 
 ## Skill 路由层
 
@@ -18,9 +18,25 @@ Tuanjie Workflows
 
 `tuanjie-workflows` 只负责判断团结/Unity 边界和选择专项 Skill；专项 Skill 可以独立安装，并且各自重复执行项目根、Editor 类型和实际 schema 闸门。只修改普通代码、配置或文档时，使用文件级工具，不强制调用 MCP。
 
+## Agent 配置层
+
+不同客户端的配置文件和状态命令不同，但都指向同一个项目级 CodelyCLI stdio 入口：
+
+```text
+Codex             → <ProjectRoot>/.codex/config.toml
+Claude Code       → <ProjectRoot>/.mcp.json
+Qoder             → Settings → MCP → My Servers（项目工作区）
+Cursor            → <ProjectRoot>/.cursor/mcp.json
+WorkBuddy         → <ProjectRoot>/.workbuddy/mcp.json
+                           ↓
+        codely.cmd serve unity-mcp --stdio --unity-project-path <ProjectRoot>
+```
+
+配置层只负责声明如何启动本地 MCP 子进程；它不安装 Bridge、不启动长期驻留服务，也不改变项目根。每个客户端都必须在实际使用前重新验证 MCP 报告的项目根。
+
 ## 连接链路
 
-    Codex
+    任意支持本地 STDIO 的 Agent
       ↓ MCP stdio
     CodelyCLI (serve unity-mcp)
       ↓ TCP / Bridge protocol
@@ -44,13 +60,13 @@ CodelyCLI 是连接宿主和 MCP 进程，不等同于独立 Unity CLI。Codely 
 
 ## 配置层级
 
-Skill 是通用行为规则，可以安装到用户级 Skill 目录并复用。MCP server 的 args 则包含 --unity-project-path，必须指向具体项目，因此项目级 .codex/config.toml 是推荐做法。用户级 ~/.codex/config.toml 适合固定的单项目或作为模板，不能自动发现当前工作区并安全切换项目。
+Skill 是通用行为规则，可以安装到支持 Skill 的用户级目录并复用。MCP server 的 args 则包含 `--unity-project-path`，必须指向具体项目，因此各客户端的项目级配置是推荐做法。用户级配置只适合固定单项目或作为模板，不能自动发现当前工作区并安全切换项目。完整路径和示例见[多 Agent 配置](agent-configurations.md)。
 
 PowerShell 模块和 EditorWindow 都只更新精确的 mcp_servers.tuanjie table；其他 MCP server 原样保留。已有配置需要变化时，PowerShell 的 Force 或 EditorWindow 的确认对话都会先创建恢复备份。
 
 ## EditorWindow 边界
 
-Window/Tuanjie Codex Setup 提供状态、CLI 选择、配置预览、显式生成、打开配置目录、打开 Package Manager 和复制提示。它不自动安装包、不写 manifest、不读取 descriptor 内容、不启动 CodelyCLI 服务。预览是只读的，写入前显示目标路径和 config.toml.bak 行为。
+Window/Tuanjie Codex Setup 提供状态、CLI 选择、Codex 配置预览、显式生成、打开配置目录、打开 Package Manager 和复制提示。它不自动安装包、不写 manifest、不读取 descriptor 内容、不启动 CodelyCLI 服务，也不替其他 Agent 生成 JSON 配置。预览是只读的，写入前显示目标路径和 config.toml.bak 行为。
 
 ## 验证闭环
 

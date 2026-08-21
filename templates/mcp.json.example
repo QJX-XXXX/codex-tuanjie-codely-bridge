@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "tuanjie": {
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "C:\\Tools\\CodelyCLI\\codely.cmd",
+        "serve",
+        "unity-mcp",
+        "--stdio",
+        "--unity-project-path",
+        "D:\\TuanjieProjects\\YourGame"
+      ]
+    }
+  }
+}

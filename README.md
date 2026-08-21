@@ -1,23 +1,36 @@
-# Codex + Tuanjie + Codely Bridge
+# Tuanjie + Codely Bridge Agent Integration
 
-这个仓库的目的，是让选择 Codex 的团队可以不依赖 TuanjieAI，直接通过 CodelyCLI 的 MCP stdio 入口和 Codely Bridge 连接团结 Editor。它提供一套可复用的团结 Editor 工作流，包含 PowerShell 配置脚本、EditorWindow UPM 包、Tuanjie + Codely Skill 套件和 Agent 提示。
+这个仓库的目的，是让使用 Codex、Claude Code、Qoder、Cursor、WorkBuddy 等 MCP Agent 的团队不依赖 TuanjieAI，直接通过 CodelyCLI 的 MCP stdio 入口和 Codely Bridge 连接团结 Editor。它提供可复用的团结 Editor 工作流，包含 PowerShell 配置脚本、EditorWindow UPM 包、Tuanjie + Codely Skill 套件、项目级 Agent 配置模板和验收指南。
 
 ## 项目定位
 
-这是“Codex + 团结 Editor”的本地连接方案，作为 TuanjieAI 之外的工作路径；它不替换团结 Editor 或 Codely Bridge，也不适用于 Unity 官方 Editor 项目。
+这是“多 Agent + 团结 Editor”的本地连接方案，作为 TuanjieAI 之外的工作路径；它不替换团结 Editor 或 Codely Bridge，也不适用于 Unity 官方 Editor 项目。
 
 ## 适用边界
 
 - 目标是团结 Editor 项目，不是 Unity 官方 Editor 项目。
 - Skill 可以全局安装并复用，但 MCP 的项目路径不能静态地“一次配置覆盖所有项目”。
 - 当前版本只声明 Windows + PowerShell 验证，不宣称 macOS/Linux 兼容。
-- 不自动安装 Node.js、Codex、CodelyCLI 或 Codely Bridge；设置阶段不启动 CodelyCLI MCP 服务，运行时由 Codex 按项目配置按需拉起，Bridge 则随团结 Editor 自动加载。
+- 不自动安装 Node.js、任意 Agent、CodelyCLI 或 Codely Bridge；设置阶段不启动长期驻留的 MCP 服务，运行时由当前 Agent 按项目配置按需拉起 stdio 子进程，Bridge 则随团结 Editor 自动加载。
+- 同一个团结 Editor 同时只允许一个 Agent 执行写入操作；切换客户端前先结束前一会话的写入并确认 Editor 稳定。
 
 ## 链路
 
-Codex → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
+任意支持本地 STDIO 的 Agent → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 
-详见 [架构说明](docs/architecture.md)、[安装与设置](docs/setup-guide.md) 和 [排错指南](docs/troubleshooting.md)。
+详见 [架构说明](docs/architecture.md)、[安装与设置](docs/setup-guide.md)、[多 Agent 配置](docs/agent-configurations.md) 和 [排错指南](docs/troubleshooting.md)。
+
+## 推荐的项目级配置
+
+| 客户端 | 项目级入口 | 推荐方式 |
+|---|---|---|
+| Codex | `.codex/config.toml` | 使用 EditorWindow 或 PowerShell 生成 |
+| Claude Code | `.mcp.json` | `claude mcp add --scope project` 或手工 JSON |
+| Qoder | MCP 设置页 | 添加本地 STDIO server，粘贴通用 JSON |
+| Cursor | `.cursor/mcp.json` | 使用项目配置文件后刷新 MCP 设置 |
+| WorkBuddy | `.workbuddy/mcp.json` | 使用项目配置文件后在 MCP 页面刷新 |
+
+所有配置都必须把 `--unity-project-path` 指向当前项目的规范化绝对路径。四个平台的完整示例、状态判断和安全边界见 [多 Agent 配置](docs/agent-configurations.md)。
 
 ## Skills 套件
 
@@ -42,16 +55,16 @@ Codex → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 
 ## 运行方式
 
-安装并配置完成后，打开团结项目即可让 Codely Bridge 随 Editor 自动加载和初始化；Codex 首次调用 `tuanjie` MCP 时，会按项目 `.codex/config.toml` 自动启动 CodelyCLI 的 stdio 服务，不需要每次点击连接，也不需要手动运行长期驻留的 MCP 服务。
+安装并配置完成后，打开团结项目即可让 Codely Bridge 随 Editor 自动加载和初始化；当前 Agent 首次使用 `tuanjie` MCP 时，会按对应的项目配置自动启动 CodelyCLI 的 stdio 服务，不需要手动运行长期驻留的 MCP 服务。
 
 ## 前置条件
 
 1. 安装与项目版本匹配的团结 Editor。
 2. 按[官方 Codely Bridge 安装流程](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)安装与 Editor 版本匹配的 Codely Bridge，并打开目标团结项目。
 3. 安装 Node.js LTS、CodelyCLI，并准备好 `codely.cmd` 的绝对路径。
-4. 安装 Codex，在其中打开并信任当前项目目录。
+4. 安装至少一个支持本地 MCP STDIO 的 Agent，并在其中打开并信任当前项目目录。
 
-完整安装、Agent 主导接入、EditorWindow、PowerShell、`config.toml` 和验证步骤统一见[安装与设置](docs/setup-guide.md)。普通用户只需按 GitHub 子路径安装 Skill 套件和 EditorWindow UPM 包，不需要克隆或下载整个仓库。
+完整安装、Agent 主导接入、EditorWindow、PowerShell、各客户端配置和验证步骤见[安装与设置](docs/setup-guide.md)。普通用户只需按 GitHub 子路径安装 Skill 套件和 EditorWindow UPM 包，不需要克隆或下载整个仓库。
 
 ## Agent 规则
 

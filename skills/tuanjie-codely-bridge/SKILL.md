@@ -1,11 +1,11 @@
 ---
 name: tuanjie-codely-bridge
-description: Use when a Tuanjie Editor project needs Codely Bridge, CodelyCLI, Codex MCP configuration, connection diagnostics, or read-only connection acceptance; do not use for Unity official Editor projects.
+description: Use when a Tuanjie Editor project needs Codely Bridge, CodelyCLI, MCP client configuration, connection diagnostics, or read-only connection acceptance; do not use for Unity official Editor projects.
 ---
 
 # Tuanjie Codely Bridge
 
-这个 Skill 只负责连接层，不替换团结 Editor、Codely Bridge 或 CodelyCLI。它把“Skill 已安装”“MCP 已注册”和“Editor 实际可读”分开证明。
+这个 Skill 只负责连接层，不替换团结 Editor、Codely Bridge 或 CodelyCLI。它把“Skill 已安装”“MCP 已注册”和“Editor 实际可读”分开证明，并能按当前 Agent 选择项目级 MCP 配置入口。
 
 ## Skill 宿主与生效
 
@@ -15,7 +15,7 @@ description: Use when a Tuanjie Editor project needs Codely Bridge, CodelyCLI, C
 - Codely CLI / Tuanjie AI：工作区使用 `.codely-cli/skills/` 或 `.agents/skills/`，用户级使用 `~/.codely-cli/skills/` 或 `~/.agents/skills/`；可用 `codely skills install <skill-directory>` 管理一个 Skill 目录。通过 `@` 选择 Skill，使用 `/skills list` 或 `/skills reload` 检查和刷新；修改后按官方行为开启新会话或 reload。
 - 当前仓库是多目录仓库时，只安装 `skills/tuanjie-codely-bridge` 这个 Skill 目录，不把仓库根目录当作 Skill。
 
-详细宿主路径和刷新规则见 [references/codely-integration.md](references/codely-integration.md)。需要生成或诊断项目级 `.codex/config.toml` 时读取 [references/setup-and-config.md](references/setup-and-config.md)；需要分层判断连接状态时读取 [references/connection-diagnostics.md](references/connection-diagnostics.md)。
+详细宿主路径和刷新规则见 [references/codely-integration.md](references/codely-integration.md)。需要按客户端选择项目级配置时读取 [references/agent-client-configurations.md](references/agent-client-configurations.md)；需要生成或诊断项目级 `.codex/config.toml` 时读取 [references/setup-and-config.md](references/setup-and-config.md)；需要分层判断连接状态时读取 [references/connection-diagnostics.md](references/connection-diagnostics.md)。
 
 ## 入口闸门
 
@@ -33,8 +33,8 @@ Unity 官方 Editor 不是本 Skill 的目标。即使用户说“用 Codely Bri
 ## 连接层职责
 
 1. 从 EditorPrefs、`CODELY_CLI_PATH`、`PATH` 或用户提供的绝对路径定位 `codely.cmd`，运行 `--version`。
-2. 只更新当前项目 `.codex/config.toml` 的 `[mcp_servers.tuanjie]`；已有配置变化时先备份，保留其他 MCP table。
-3. 用 `codex mcp list` 证明 server 注册；这不等于 Editor 实际连接。
+2. 只更新当前 Agent 的项目级 MCP 配置：Codex 使用 `.codex/config.toml`，Claude Code 使用 `.mcp.json`，Qoder 使用其 Settings → MCP → My Servers 工作区配置，Cursor 使用 `.cursor/mcp.json`，WorkBuddy 使用 `.workbuddy/mcp.json`；已有配置变化时先备份，保留其他 server。
+3. 用当前 Agent 实际支持的 MCP 列表/状态检查证明 server 注册；Codex 可用 `codex mcp list`，这不等于 Editor 实际连接。
 4. 如果实际暴露只读 MCP 工具，核对返回的项目根；否则报告实际连接验收未完成。
 5. 不读取、复制或输出 token、端口、descriptor 或临时认证信息。
 

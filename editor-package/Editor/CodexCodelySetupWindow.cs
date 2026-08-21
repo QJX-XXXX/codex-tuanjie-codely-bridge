@@ -20,9 +20,15 @@ namespace QJX.CodexTuanjieBridge.Editor
             GetWindow<CodexCodelySetupWindow>();
         }
 
+        [MenuItem("Window/Tuanjie Codely Agent Setup")]
+        private static void OpenAgentSetup()
+        {
+            Open();
+        }
+
         private void OnEnable()
         {
-            titleContent = new GUIContent("Tuanjie Codex Setup");
+            titleContent = new GUIContent("Tuanjie Codely Agent Setup");
             minSize = new Vector2(520f, 420f);
             RefreshStatus();
         }
@@ -30,10 +36,10 @@ namespace QJX.CodexTuanjieBridge.Editor
         private void OnGUI()
         {
             EditorGUILayout.LabelField(
-                "Codex + Codely Bridge 项目配置",
+                "Tuanjie + Codely Bridge 项目配置",
                 EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "此窗口只配置团结项目的 Codex MCP 入口，不会自动安装包或启动 CodelyCLI 服务。",
+                "此窗口只生成团结项目的 Codex MCP 配置；Claude Code、Qoder、Cursor 和 WorkBuddy 请按仓库文档配置，不会自动安装包或启动长期驻留服务。",
                 MessageType.Info);
 
             if (GUILayout.Button("刷新状态"))
@@ -77,7 +83,7 @@ namespace QJX.CodexTuanjieBridge.Editor
                 "项目 config.toml",
                 _status.ProjectConfigExists ? "已存在" : "未创建");
             DrawStatusRow(
-                "全局 Skill",
+                "Codex Skill",
                 _status.GlobalSkillExists ? "已安装" : "未找到");
             if (!string.IsNullOrEmpty(_status.Error))
             {
@@ -121,10 +127,10 @@ namespace QJX.CodexTuanjieBridge.Editor
                 {
                     EditorApplication.ExecuteMenuItem("Window/Package Manager");
                 }
-                if (GUILayout.Button("复制 Skill 安装提示"))
+                if (GUILayout.Button("复制 Codex Skill 安装提示"))
                 {
                     GUIUtility.systemCopyBuffer =
-                        "将 skills/tuanjie-codely-bridge 安装到 ~/.codex/skills/，然后重新打开 Codex 对话。";
+                        "将 Tuanjie Codely Skills 安装到当前 Codex 支持的用户级 Skill 目录，然后重新打开 Codex 对话；其他 Agent 请按多 Agent 配置文档添加项目级 MCP。";
                 }
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -141,7 +147,7 @@ namespace QJX.CodexTuanjieBridge.Editor
                     if (GUILayout.Button("复制连接诊断提示"))
                     {
                         CopyPrompt(
-                            "请诊断 Codex → CodelyCLI → Codely Bridge → 团结 Editor 链路，并报告项目路径、版本和错误。");
+                            "请诊断当前 Agent → CodelyCLI → Codely Bridge → 团结 Editor 链路，并报告项目路径、版本和错误。");
                     }
                 }
             }
@@ -308,8 +314,8 @@ namespace QJX.CodexTuanjieBridge.Editor
                 !status.ProjectConfigExists)
             {
                 EditorUtility.DisplayDialog(
-                    "Tuanjie Codex Setup",
-                    "检测到团结项目尚未配置 Codex MCP。可从 Window/Tuanjie Codex Setup 手动预览并生成配置。",
+                    "Tuanjie Codely Agent Setup",
+                    "检测到团结项目尚未配置 Codex MCP。可从 Window/Tuanjie Codely Agent Setup 手动预览并生成 Codex 配置；其他 Agent 请按仓库文档配置。",
                     "知道了");
                 EditorPrefs.SetBool(PromptedKey, true);
             }

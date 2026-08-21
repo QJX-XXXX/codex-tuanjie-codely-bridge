@@ -1,13 +1,30 @@
 # 排错指南
 
-## MCP 未出现在 Codex
+## MCP 未出现在当前 Agent
 
 1. 确认当前工作目录是目标项目根。
-2. 确认 .codex/config.toml 的 command、CodelyCLI 路径和 --unity-project-path 都是有效绝对路径。
-3. 运行 codex mcp list，检查 server 名称为 tuanjie。
-4. 保持目标团结 Editor 打开；Bridge 按官方流程随 Editor 加载和初始化。重新打开 Codex 对话后，再用实际只读 MCP 调用核对项目根，不把窗口或包文件存在当作“已连接”证明。
+2. 按当前客户端检查项目级配置：Codex 使用 `.codex/config.toml`，Claude Code 使用 `.mcp.json`，Qoder 使用 Settings → MCP → My Servers，Cursor 使用 `.cursor/mcp.json`，WorkBuddy 使用 `.workbuddy/mcp.json`。
+3. 确认 command、CodelyCLI 路径和 `--unity-project-path` 都是有效绝对路径，并运行 `codely.cmd --version`。
+4. 使用当前客户端实际支持的 MCP 列表或状态检查，确认 server 名称为 `tuanjie`。
+5. 保持目标团结 Editor 打开；Bridge 按官方流程随 Editor 加载和初始化。再用实际只读 MCP 调用核对项目根，不把窗口、包文件或连接图标存在当作“已连接”证明。
 
-静态全局 config.toml 不能自动绑定所有项目；切换项目后要重新审核 --unity-project-path。
+静态全局配置不能自动绑定所有项目；切换项目后要重新审核 `--unity-project-path`。
+
+### Claude Code
+
+在项目根运行 `claude mcp list` 和 `claude mcp get tuanjie`；会话内用 `/mcp` 查看实际工具。`.mcp.json` 变更后按提示批准项目配置，未获批准时不要继续写入。
+
+### Qoder
+
+在 **Settings → MCP → My Servers** 中刷新条目，确认连接图标和工具列表。Qoder UI 未显示工具时，先检查 JSON 中 command/args 和项目根，再重新打开项目；不要把 SSE/HTTP 示例套到本地 STDIO 配置。
+
+### Cursor
+
+确认项目根的 `.cursor/mcp.json` 已被当前窗口加载，并在 MCP 设置页刷新工具列表。只有本机确实安装 Cursor Agent CLI 时才运行 `cursor-agent mcp list`；命令不存在时以 UI 为准。
+
+### WorkBuddy
+
+确认项目根的 `.workbuddy/mcp.json`，在 **Plugins → MCP servers → Configure MCP** 刷新。绿色状态表示客户端条目可用；仍需执行只读 MCP 调用并比较项目根。
 
 ## CodelyCLI 找不到或版本失败
 
@@ -27,7 +44,7 @@
 
 ## MCP 根路径不一致
 
-如果 Codex 工作区和 MCP 状态报告的项目根不同，立即停止写入。关闭错误项目的连接，连接目标项目后重新读取根路径；不要把调用成功当作写入当前项目。
+如果当前 Agent 工作区和 MCP 状态报告的项目根不同，立即停止写入。关闭错误项目的连接，连接目标项目后重新读取根路径；不要把调用成功当作写入当前项目。
 
 ## 写入前拒绝覆盖
 
@@ -60,3 +77,7 @@
 ## 自定义工具编译成功但未注册
 
 “方法编译成功”只证明程序集可编译；还要等 Domain Reload，重新发现当前 MCP schema，并确认准确工具名和参数。如果 schema 没有该工具，报告 Bridge 扫描/暴露未完成，不调用、不回退、不声称可用。
+
+## 多 Agent 同时操作
+
+同一个团结 Editor 不要同时让多个 Agent 执行写入。先结束前一客户端的写入会话，确认 Editor 不在导入、编译、Domain Reload、保存或切换 Play Mode，再刷新下一个客户端的 MCP 连接。这样可以避免两个 stdio 进程对同一 Scene、Prefab 或包状态产生交错修改。
