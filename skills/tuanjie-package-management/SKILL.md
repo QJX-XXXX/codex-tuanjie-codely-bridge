@@ -16,7 +16,7 @@ description: Use when a Tuanjie Editor project needs package discovery, installa
 ## 安全规则
 
 - 先读取 `Packages/manifest.json`、当前解析结果和相关依赖，再决定动作。
-- 优先使用当前 Editor/Bridge 实际暴露的包管理能力；包名、参数和返回字段必须来自当前 schema。
+- 优先使用当前 schema 实际暴露的 Codely `unity_package`；包名、action、参数和返回字段必须来自当前 schema。
 - 默认不手工编辑 `manifest.json`；若能力不可用且用户明确授权，先说明影响并创建恢复备份，只做最小合并。
 - 永远不要手工修改 `packages-lock.json`。
 - 包请求完成后等待包解析、资源导入、编译和 Domain Reload 稳定，再读取 manifest、解析结果和 Console。
