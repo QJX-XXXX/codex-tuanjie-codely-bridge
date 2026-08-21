@@ -15,11 +15,9 @@ namespace QJX.CodexTuanjieBridge.Editor
         public string BridgeVersion { get; set; }
         public bool DescriptorExists { get; set; }
         public CodelyCliResolution CodelyCli { get; set; }
-        public bool ProjectConfigExists { get; set; }
-        public bool GlobalSkillExists { get; set; }
         public string Error { get; set; }
 
-        public bool CanGenerateConfig
+        public bool CanConfigureClient
         {
             get
             {
@@ -71,10 +69,6 @@ namespace QJX.CodexTuanjieBridge.Editor
             string root = projectRoot ?? string.Empty;
             status.DescriptorExists = File.Exists(
                 Path.Combine(root, ".com-unity-codely.json"));
-            status.ProjectConfigExists = File.Exists(
-                Path.Combine(root, ".codex", "config.toml"));
-            status.GlobalSkillExists = File.Exists(GetGlobalSkillPath());
-
             string environmentPath = Environment.GetEnvironmentVariable("CODELY_CLI_PATH");
             status.CodelyCli = CodelyCliLocator.Resolve(
                 configuredCliPath,
@@ -92,18 +86,6 @@ namespace QJX.CodexTuanjieBridge.Editor
                 status.Error = status.Project.Error;
             }
             return status;
-        }
-
-        internal static string GetGlobalSkillPath()
-        {
-            string codexHome = Environment.GetEnvironmentVariable("CODEX_HOME");
-            if (string.IsNullOrWhiteSpace(codexHome))
-            {
-                codexHome = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    ".codex");
-            }
-            return Path.Combine(codexHome, "skills", "tuanjie-codely-bridge", "SKILL.md");
         }
 
         private static IReadOnlyList<string> FindCodelyCliOnPath()

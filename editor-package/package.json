@@ -1,8 +1,8 @@
 {
   "name": "cn.qjx.codex-codely-setup",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "displayName": "Tuanjie Codely Agent Setup",
-  "description": "Provides project-scoped MCP setup guidance for Codex, Claude Code, Qoder, Cursor and WorkBuddy with CodelyCLI and Codely Bridge.",
+  "description": "Configures five Agent MCP entries and installs the Tuanjie Codely Skills suite safely in Tuanjie Editor.",
   "unity": "2022.3",
   "documentationUrl": "https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge",
   "licensesUrl": "https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/blob/main/LICENSE",

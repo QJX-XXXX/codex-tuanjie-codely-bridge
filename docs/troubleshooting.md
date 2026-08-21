@@ -3,20 +3,20 @@
 ## MCP 未出现在当前 Agent
 
 1. 确认当前工作目录是目标项目根。
-2. 按当前客户端检查项目级配置：Codex 使用 `.codex/config.toml`，Claude Code 使用 `.mcp.json`，Qoder 使用 Settings → MCP → My Servers，Cursor 使用 `.cursor/mcp.json`，WorkBuddy 使用 `.workbuddy/mcp.json`。
+2. 在 EditorWindow 确认客户端、配置范围和目标路径。用户级全局只指向最后配置的单个项目；多项目并行应选择当前项目范围。
 3. 确认 command、CodelyCLI 路径和 `--unity-project-path` 都是有效绝对路径，并运行 `codely.cmd --version`。
 4. 使用当前客户端实际支持的 MCP 列表或状态检查，确认 server 名称为 `tuanjie`。
 5. 保持目标团结 Editor 打开；Bridge 按官方流程随 Editor 加载和初始化。再用实际只读 MCP 调用核对项目根，不把窗口、包文件或连接图标存在当作“已连接”证明。
 
-静态全局配置不能自动绑定所有项目；切换项目后要重新审核 `--unity-project-path`。
+静态全局配置不能自动绑定所有项目；切换项目后点击“重新读取”，预览并更新 `--unity-project-path`，或者改用当前项目范围。
 
 ### Claude Code
 
-在项目根运行 `claude mcp list` 和 `claude mcp get tuanjie`；会话内用 `/mcp` 查看实际工具。`.mcp.json` 变更后按提示批准项目配置，未获批准时不要继续写入。
+运行 `claude mcp list` 和 `claude mcp get tuanjie`；会话内用 `/mcp` 查看实际工具。EditorWindow 的当前项目范围写入 `~/.claude.json` 对应项目的 local scope；团队共享 `.mcp.json` 发生变化时仍要按提示批准项目配置。
 
 ### Qoder
 
-在 **Settings → MCP → My Servers** 中刷新条目，确认连接图标和工具列表。Qoder UI 未显示工具时，先检查 JSON 中 command/args 和项目根，再重新打开项目；不要把 SSE/HTTP 示例套到本地 STDIO 配置。
+在 **Settings → MCP → My Servers** 中刷新条目，确认连接图标和工具列表。当前项目范围应检查 `.qoder/settings.local.json`；Qoder UI 未显示工具时，先检查 JSON 中 command/args 和项目根，再重新打开项目。
 
 ### Cursor
 
@@ -48,7 +48,7 @@
 
 ## 写入前拒绝覆盖
 
-已有 config.toml 发生差异时，PowerShell 需要 -Force，EditorWindow 需要确认对话。检查 config.toml.bak 后再继续；重复 table、边界不完整或写入校验失败都应停止。
+PowerShell 更新 Codex 项目 TOML 时需要 `-Force`。EditorWindow 对所有五个客户端都先预览再确认；已有文件会创建同目录 `.bak`。重复目标、缺少路径参数、结构不完整、预览过期或写入校验失败都应停止，不要改用整体 JSON/TOML 重写。
 
 ## C# 编译错误
 

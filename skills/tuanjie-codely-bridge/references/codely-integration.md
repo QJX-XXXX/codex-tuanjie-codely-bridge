@@ -2,7 +2,7 @@
 
 ## Skill 宿主
 
-本仓库的 `skills/tuanjie-codely-bridge` 是一个标准 `SKILL.md` 目录，可以被支持 Skills 的 Agent 宿主（包括 Codex、Codely CLI/Tuanjie AI）发现；不同宿主的目录和刷新命令不能混用。Claude Code、Qoder、Cursor、WorkBuddy 即使不加载 Codex Skill，也可以按项目级 MCP 配置使用同一 Codely Bridge 链路。
+本仓库的 `skills/tuanjie-codely-bridge` 是一个标准 `SKILL.md` 目录，可以被支持 Skills 的 Agent 宿主（包括 Codex、Codely CLI/Tuanjie AI）发现；不同宿主的目录和刷新命令不能混用。Claude Code、Qoder、Cursor、WorkBuddy 即使不加载 Codex Skill，也可以按各自的用户级或当前项目 MCP 配置使用同一 Codely Bridge 链路。
 
 | 宿主 | 发现路径 | 选择/刷新 | 生效时机 |
 |---|---|---|---|

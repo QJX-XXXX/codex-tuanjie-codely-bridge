@@ -2,7 +2,7 @@
 
 ## 适用范围
 
-仅在当前工作区已经确认是团结项目、用户允许修改项目配置且目标是连接某个 Agent 与当前项目时读取本文件。不要用它安装或替换团结 Editor、Codely Bridge、CodelyCLI 或 Node.js。Codex 的 TOML 细节仍在本文件；其他客户端的配置入口见 [agent-client-configurations.md](agent-client-configurations.md)。
+仅在当前工作区已经确认是团结项目、用户允许修改所选客户端配置且目标是连接某个 Agent 与当前项目时读取本文件。不要用它安装或替换团结 Editor、Codely Bridge、CodelyCLI 或 Node.js。五客户端的用户级和当前项目入口见 [agent-client-configurations.md](agent-client-configurations.md)。
 
 ## 安全顺序
 
@@ -10,20 +10,20 @@
 规范化项目绝对路径
 → 从 EditorPrefs、CODELY_CLI_PATH、PATH 或用户路径定位 codely.cmd
 → 确认路径为绝对文件并运行 --version
-→ 选择当前 Agent 的项目级配置入口
+→ 选择当前 Agent 和用户级/当前项目范围
 → 目标文件已有变化时创建恢复备份
 → 只更新 tuanjie server
 → 重读配置并运行该 Agent 实际支持的 MCP 状态检查
 ```
 
-修改前报告目标路径和备份行为。只保留其他 MCP table、注释和无关配置；不要把用户级 MCP 配置当作当前项目的自动切换机制。不要手工修改 `packages-lock.json`。
+修改前报告目标路径和备份行为。用户级全局默认只适合一个活动项目，不会自动切换工作区；多项目并行时选择当前项目。已有 `tuanjie` 只替换路径参数，其他 MCP table、server、注释、顺序和空白必须保持。不要手工修改 `packages-lock.json`。
 
 ## 状态含义
 
 | 检查 | 能证明 | 不能证明 |
 |---|---|---|
 | `codely.cmd --version` | CLI 路径和版本可执行 | Bridge 已连接 |
-| `config.toml` 存在 | 项目配置文件已写入 | 配置参数可用或项目根正确 |
+| 客户端配置文件存在 | 文件已写入 | `tuanjie` 参数可用或项目根正确 |
 | 当前 Agent 的 MCP 列表出现 `tuanjie` | MCP server 已注册 | 团结 Editor 正在运行或实际可读 |
 | 只读 MCP 返回项目根一致 | 当前会话实际到达目标项目 | 任意写入动作成功 |
 

@@ -20,14 +20,14 @@ Tuanjie Workflows
 
 ## Agent 配置层
 
-不同客户端的配置文件和状态命令不同，但都指向同一个项目级 CodelyCLI stdio 入口：
+不同客户端的配置文件和状态命令不同，但都指向同一个 CodelyCLI stdio 入口。EditorWindow 默认选择用户级全局（单项目），也可选择当前项目（多项目并行推荐）：
 
 ```text
-Codex             → <ProjectRoot>/.codex/config.toml
-Claude Code       → <ProjectRoot>/.mcp.json
-Qoder             → Settings → MCP → My Servers（项目工作区）
-Cursor            → <ProjectRoot>/.cursor/mcp.json
-WorkBuddy         → <ProjectRoot>/.workbuddy/mcp.json
+Codex             → ~/.codex/config.toml 或 <ProjectRoot>/.codex/config.toml
+Claude Code       → ~/.claude.json（user 或当前项目 local scope）
+Qoder             → ~/.qoder/settings.json 或 <ProjectRoot>/.qoder/settings.local.json
+Cursor            → ~/.cursor/mcp.json 或 <ProjectRoot>/.cursor/mcp.json
+WorkBuddy         → ~/.workbuddy/mcp.json 或 <ProjectRoot>/.workbuddy/mcp.json
                            ↓
         codely.cmd serve unity-mcp --stdio --unity-project-path <ProjectRoot>
 ```
@@ -60,13 +60,13 @@ CodelyCLI 是连接宿主和 MCP 进程，不等同于独立 Unity CLI。Codely 
 
 ## 配置层级
 
-Skill 是通用行为规则，可以安装到支持 Skill 的用户级目录并复用。MCP server 的 args 则包含 `--unity-project-path`，必须指向具体项目，因此各客户端的项目级配置是推荐做法。用户级配置只适合固定单项目或作为模板，不能自动发现当前工作区并安全切换项目。完整路径和示例见[多 Agent 配置](agent-configurations.md)。
+Skill 是通用行为规则，可以安装到支持 Skill 的用户级目录并复用。MCP server 的 args 包含 `--unity-project-path`，必须指向具体项目。EditorWindow 默认用户级全局配置以减少单项目首次接入步骤，但这个静态条目只能指向最后配置的一个项目；多个项目同时使用时选择当前项目范围。完整路径和示例见[多 Agent 配置](agent-configurations.md)。
 
-PowerShell 模块和 EditorWindow 都只更新精确的 mcp_servers.tuanjie table；其他 MCP server 原样保留。已有配置需要变化时，PowerShell 的 Force 或 EditorWindow 的确认对话都会先创建恢复备份。
+PowerShell 模块只处理 Codex 项目 TOML；EditorWindow 通过五个显式客户端适配器处理 TOML 或 JSON/JSONC。已有 `tuanjie` 时，EditorWindow 只替换 `--unity-project-path` 后面的字符串，其他字节保持不变；缺少条目时才最小插入。写入前检查预览是否过期并创建恢复备份，写入后执行字节边界和语义双重校验。
 
 ## EditorWindow 边界
 
-Window/Tuanjie Codex Setup 提供状态、CLI 选择、Codex 配置预览、显式生成、打开配置目录、打开 Package Manager 和复制提示。它不自动安装包、不写 manifest、不读取 descriptor 内容、不启动 CodelyCLI 服务，也不替其他 Agent 生成 JSON 配置。预览是只读的，写入前显示目标路径和 config.toml.bak 行为。
+`Window/Tuanjie Codely Agent Setup` 提供五客户端选择、用户级/当前项目范围、状态、CLI 选择、五 Skill 安装/更新、唯一变更预览、显式写入和配置目录。客户端注册表是固定列表，不通过反射增加第六个客户端。窗口不自动安装包、不写 manifest、不读取 descriptor 内容、不启动 CodelyCLI 服务；“重新读取”和预览始终只读。
 
 ## 验证闭环
 
