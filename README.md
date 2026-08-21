@@ -30,7 +30,7 @@ Codex → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 3. 安装 Node.js LTS、CodelyCLI，并准备好 `codely.cmd` 的绝对路径。
 4. 安装 Codex，在其中打开并信任当前项目目录。
 
-完整安装、Agent 主导接入、EditorWindow、PowerShell、`config.toml` 和验证步骤统一见[安装与设置](docs/setup-guide.md)，不要把下面的入口连续执行一遍。
+完整安装、Agent 主导接入、EditorWindow、PowerShell、`config.toml` 和验证步骤统一见[安装与设置](docs/setup-guide.md)。普通用户只需按 GitHub 子路径安装 Skill 和 EditorWindow UPM 包，不需要克隆或下载整个仓库。
 
 ## Agent 提示
 
