@@ -1,13 +1,23 @@
 ---
 name: tuanjie-codely-bridge
-description: Use when a Tuanjie Editor project needs a Codex-based alternative to TuanjieAI through Codely Bridge, CodelyCLI, or tuanjie MCP setup, diagnostics, or Editor automation; do not use for Unity official Editor projects.
+description: Use when a Tuanjie Editor project needs Codex or Codely Skills to set up, diagnose, or safely operate Codely Bridge, CodelyCLI, tuanjie MCP, or verified Bridge custom tools; do not use for Unity official Editor projects.
 ---
 
 # Tuanjie Codely Bridge
 
-这个 Skill 让 Codex 走“团结 Editor + Codely Bridge + CodelyCLI/tuanjie MCP”链路，提供 TuanjieAI 之外的本地 Agent 工作路径。它只覆盖该链路，不替换团结 Editor 或 Codely Bridge。核心契约是：
+这个 Skill 让 Codex 或 Codely Skills 走“团结 Editor + Codely Bridge + CodelyCLI/tuanjie MCP”链路，提供 TuanjieAI 之外的本地 Agent 工作路径。它只覆盖该链路，不替换团结 Editor 或 Codely Bridge。核心契约是：
 
 **先确认状态和目标项目 → 选择已验证工具 → 最小动作 → 重新读取 → 保存/测试确认。**
+
+## Skill 宿主与生效
+
+本 Skill 可被不同宿主发现，但安装目录和刷新方式不同；不要把“文件已复制”当作“当前会话已加载”。
+
+- Codex：安装到 `$CODEX_HOME/skills/tuanjie-codely-bridge`（未设置时通常是 `~/.codex/skills/tuanjie-codely-bridge`），在新会话中使用 `$tuanjie-codely-bridge`。安装或修改后，当前会话没有重新加载证明时，不得声称新版本已生效。
+- Codely CLI / Tuanjie AI：工作区使用 `.codely-cli/skills/` 或 `.agents/skills/`，用户级使用 `~/.codely-cli/skills/` 或 `~/.agents/skills/`；可用 `codely skills install <skill-directory>` 管理一个 Skill 目录。通过 `@` 选择 Skill，使用 `/skills list` 或 `/skills reload` 检查和刷新；修改后按官方行为开启新会话或 reload。
+- 当前仓库是多目录仓库时，只安装 `skills/tuanjie-codely-bridge` 这个 Skill 目录，不把仓库根目录当作 Skill。
+
+详细宿主路径、刷新规则和 Bridge 自定义工具边界见 [references/codely-integration.md](references/codely-integration.md)。
 
 ## 入口闸门
 
@@ -29,6 +39,8 @@ Unity 官方 Editor 不是本 Skill 的目标。即使用户说“用 Codely Bri
 - Unity 官方项目：按项目真实的 Pipeline 状态选择已连接的官方 Unity 工具；不调用 Codely Bridge。
 - 仅代码/配置/Markdown：使用文件级工具；无需为了改文本调用 MCP。
 - Bridge、Editor、项目路径或 schema 未验证：先做只读诊断；没有安全方案就停止。
+
+Bridge 自定义工具是项目级扩展：官方文档、历史对话或用户给出的工具名称都不是能力证明。只有当前 `tuanjie` MCP schema 实际暴露的自定义工具及其参数才可调用；名称或参数不可见时停止，不用相似工具替代，也不默认切换到 Unity MCP。
 
 ## 修改契约
 
