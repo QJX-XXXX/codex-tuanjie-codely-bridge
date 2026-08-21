@@ -115,6 +115,7 @@ namespace QJX.CodexTuanjieBridge.Editor
             int added = 0;
             int updated = 0;
             int unchanged = 0;
+            bool preservedLegacyBackup = false;
 
             try
             {
@@ -131,6 +132,8 @@ namespace QJX.CodexTuanjieBridge.Editor
                     bool targetExists = Directory.Exists(targetPath);
                     bool owned = targetExists && File.Exists(
                         Path.Combine(targetPath, OwnershipMarkerName));
+                    bool legacySkill = targetExists && !owned &&
+                        IsLegacySkillDirectory(targetPath, skillName);
 
                     if (owned && DirectoryMatchesSnapshot(targetPath, remoteFiles))
                     {
@@ -144,6 +147,7 @@ namespace QJX.CodexTuanjieBridge.Editor
                     {
                         Directory.CreateDirectory(backupRoot);
                         Directory.Move(targetPath, backupPath);
+                        preservedLegacyBackup = preservedLegacyBackup || legacySkill;
                     }
 
                     try
@@ -176,7 +180,9 @@ namespace QJX.CodexTuanjieBridge.Editor
                     }
                 }
 
-                string cleanupWarning = TryDeleteDirectory(backupRoot);
+                string cleanupWarning = preservedLegacyBackup
+                    ? "旧版 Skill 已保留备份：" + backupRoot
+                    : TryDeleteDirectory(backupRoot);
                 TryDeleteDirectory(stagingRoot);
                 return new SkillInstallationResult
                 {
@@ -399,6 +405,7 @@ namespace QJX.CodexTuanjieBridge.Editor
                         new HashSet<string>(
                             snapshot.FilesBySkill[skillName].Keys,
                             StringComparer.OrdinalIgnoreCase),
+                        skillName,
                         out error))
                 {
                     throw new InvalidOperationException(error);
@@ -409,6 +416,19 @@ namespace QJX.CodexTuanjieBridge.Editor
         public static bool CanManageExistingDirectory(
             string targetPath,
             ICollection<string> remoteRelativePaths,
+            out string error)
+        {
+            return CanManageExistingDirectory(
+                targetPath,
+                remoteRelativePaths,
+                string.Empty,
+                out error);
+        }
+
+        internal static bool CanManageExistingDirectory(
+            string targetPath,
+            ICollection<string> remoteRelativePaths,
+            string expectedSkillName,
             out string error)
         {
             error = string.Empty;
@@ -433,6 +453,8 @@ namespace QJX.CodexTuanjieBridge.Editor
             HashSet<string> remote = new HashSet<string>(
                 remoteRelativePaths,
                 StringComparer.OrdinalIgnoreCase);
+            bool legacySkill = !string.IsNullOrWhiteSpace(expectedSkillName) &&
+                IsLegacySkillDirectory(targetPath, expectedSkillName);
             bool hasSkillDefinition = false;
             for (int index = 0; index < files.Length; index++)
             {
@@ -452,9 +474,10 @@ namespace QJX.CodexTuanjieBridge.Editor
                 {
                     hasSkillDefinition = true;
                 }
-                if (!remote.Contains(relativePath))
+                if (!remote.Contains(relativePath) &&
+                    !(legacySkill && IsKnownLegacySkillPath(relativePath)))
                 {
-                    error = "目标 Skill 目录包含不属于远端版本的文件，已拒绝覆盖：" +
+                    error = "目标 Skill 目录包含不属于已识别 Skill 内容的文件，已拒绝覆盖：" +
                             relativePath + "\n目录：" + targetPath;
                     return false;
                 }
@@ -466,6 +489,75 @@ namespace QJX.CodexTuanjieBridge.Editor
                 return false;
             }
             return true;
+        }
+
+        private static bool IsLegacySkillDirectory(
+            string targetPath,
+            string expectedSkillName)
+        {
+            string definitionPath = Path.Combine(targetPath, "SKILL.md");
+            if (!File.Exists(definitionPath) ||
+                string.IsNullOrWhiteSpace(expectedSkillName))
+            {
+                return false;
+            }
+
+            try
+            {
+                string[] lines = File.ReadAllLines(
+                    definitionPath,
+                    new UTF8Encoding(false, true));
+                for (int index = 0; index < lines.Length; index++)
+                {
+                    string line = lines[index].Trim();
+                    if (!line.StartsWith("name:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    string actualName = line.Substring("name:".Length).Trim();
+                    return string.Equals(
+                        actualName,
+                        expectedSkillName,
+                        StringComparison.OrdinalIgnoreCase);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return false;
+        }
+
+        private static bool IsKnownLegacySkillPath(string relativePath)
+        {
+            if (string.Equals(
+                    relativePath,
+                    "SKILL.md",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            int separatorIndex = relativePath.IndexOf('/');
+            if (separatorIndex <= 0)
+            {
+                return false;
+            }
+
+            string topLevelDirectory = relativePath.Substring(0, separatorIndex);
+            switch (topLevelDirectory.ToLowerInvariant())
+            {
+                case "agents":
+                case "references":
+                case "scripts":
+                case "assets":
+                case "examples":
+                case "templates":
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private static bool DirectoryMatchesSnapshot(

@@ -62,6 +62,8 @@ PowerShell 更新 Codex 项目 TOML 时需要 `-Force`。EditorWindow 对所有�
 
 先确认请求属于哪个 Skill：`tuanjie-codely-bridge` 负责连接，`tuanjie-editor-automation` 负责对象/脚本，`tuanjie-package-management` 负责包，`tuanjie-codely-custom-tools` 负责自定义工具。缺少对应目录时，先在 EditorWindow 选择当前客户端并点击“安装/更新 Skills”；窗口不可用时再按[客户端参考与手动回退](agent-configurations.md)处理。不要让入口 Skill 猜测专项流程，也不要克隆整个仓库。
 
+如果安装提示某个旧文件（例如已移除的 `references/tool-routing.md`）不属于远端版本，先确认目标目录的 `SKILL.md` 名称与目标 Skill 相同，再更新到包含旧版迁移逻辑的 EditorWindow 包。识别到同名旧 Skill 后，窗口会保留旁路备份并替换旧版；目录中存在无法归属的个人文件时仍会拒绝覆盖。
+
 ## Skill 已复制但当前会话没有新能力
 
 文件复制或安装成功不等于当前会话已经加载。Codex 重新打开对话；Codely Skills 按宿主支持的 `/skills reload` 或新会话刷新。刷新后再次确认实际可用的 Skill 和 `tuanjie` MCP schema。

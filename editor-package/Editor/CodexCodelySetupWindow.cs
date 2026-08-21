@@ -104,9 +104,8 @@ namespace QJX.CodexTuanjieBridge.Editor
                     ? "当前项目会成为 " + _target.DisplayName +
                       " 唯一的全局团结项目目标；配置其他项目会替换这个路径。需要同时打开多个项目时，请改用当前项目范围。"
                     : "当前项目范围只绑定这个工作区，适合同时使用多个团结项目。";
-                EditorGUILayout.HelpBox(
-                    scopeMessage,
-                    _target.IsUserGlobal ? MessageType.Warning : MessageType.Info);
+                // 这是范围说明，不是阻断性风险；使用普通提示，避免造成“配置失败”的误解。
+                EditorGUILayout.HelpBox(scopeMessage, MessageType.Info);
             }
         }
 
@@ -186,51 +185,102 @@ namespace QJX.CodexTuanjieBridge.Editor
 
         private void DrawActions()
         {
-            using (new EditorGUILayout.HorizontalScope())
+            int action = DrawEqualButtonRow(
+                new[] { "选择 CodelyCLI", "重新读取", "打开配置目录" },
+                new[] { true, true, true });
+            switch (action)
             {
-                if (GUILayout.Button("选择 CodelyCLI")) SelectCli();
-                if (GUILayout.Button("重新读取")) RefreshStatus();
-                if (GUILayout.Button("打开配置目录")) OpenConfigDirectory();
+                case 0:
+                    SelectCli();
+                    break;
+                case 1:
+                    RefreshStatus();
+                    break;
+                case 2:
+                    OpenConfigDirectory();
+                    break;
             }
-            using (new EditorGUILayout.HorizontalScope())
+
+            action = DrawEqualButtonRow(
+                new[] { "预览配置", "打开 Package Manager" },
+                new[] { _status != null && _status.CanConfigureClient, true });
+            switch (action)
             {
-                using (new EditorGUI.DisabledScope(
-                           _status == null || !_status.CanConfigureClient))
-                {
-                    if (GUILayout.Button("预览配置")) PreviewConfig();
-                }
-                if (GUILayout.Button("打开 Package Manager"))
-                {
+                case 0:
+                    PreviewConfig();
+                    break;
+                case 1:
                     EditorApplication.ExecuteMenuItem("Window/Package Manager");
-                }
+                    break;
             }
-            using (new EditorGUILayout.HorizontalScope())
+
+            action = DrawEqualButtonRow(
+                new[] { "安装/更新 Skills", "复制客户端刷新说明" },
+                new[]
+                {
+                    !_skillInstallationInProgress && !string.IsNullOrEmpty(_skillRoot),
+                    _target != null
+                });
+            switch (action)
             {
-                using (new EditorGUI.DisabledScope(
-                           _skillInstallationInProgress || string.IsNullOrEmpty(_skillRoot)))
-                {
-                    if (GUILayout.Button("安装/更新 Skills")) InstallSkills();
-                }
-                using (new EditorGUI.DisabledScope(_target == null))
-                {
-                    if (GUILayout.Button("复制客户端刷新说明"))
-                    {
-                        GUIUtility.systemCopyBuffer = _target.ReloadGuidance;
-                    }
-                }
+                case 0:
+                    InstallSkills();
+                    break;
+                case 1:
+                    GUIUtility.systemCopyBuffer = _target.ReloadGuidance;
+                    break;
             }
+
             EditorGUILayout.Space(4f);
             using (new EditorGUI.DisabledScope(
                        _status == null || !_status.CanConfigureClient))
             {
-                if (GUILayout.Button(
-                        "配置客户端",
-                        GUILayout.ExpandWidth(true),
-                        GUILayout.Height(EditorGUIUtility.singleLineHeight * 3f)))
+                Color previousBackgroundColor = GUI.backgroundColor;
+                GUI.backgroundColor = new Color(0.62f, 0.86f, 0.62f, 1f);
+                try
                 {
-                    ConfigureClient();
+                    if (GUILayout.Button(
+                            "配置客户端",
+                            GUILayout.ExpandWidth(true),
+                            GUILayout.Height(EditorGUIUtility.singleLineHeight * 3f)))
+                    {
+                        ConfigureClient();
+                    }
+                }
+                finally
+                {
+                    GUI.backgroundColor = previousBackgroundColor;
                 }
             }
+        }
+
+        private static int DrawEqualButtonRow(
+            string[] labels,
+            bool[] enabled)
+        {
+            Rect rowRect = EditorGUILayout.GetControlRect(
+                false,
+                EditorGUIUtility.singleLineHeight);
+            const float gap = 4f;
+            float buttonWidth = (rowRect.width - gap * (labels.Length - 1)) /
+                labels.Length;
+            int clickedIndex = -1;
+            for (int index = 0; index < labels.Length; index++)
+            {
+                Rect buttonRect = new Rect(
+                    rowRect.x + index * (buttonWidth + gap),
+                    rowRect.y,
+                    buttonWidth,
+                    rowRect.height);
+                using (new EditorGUI.DisabledScope(!enabled[index]))
+                {
+                    if (GUI.Button(buttonRect, labels[index]))
+                    {
+                        clickedIndex = index;
+                    }
+                }
+            }
+            return clickedIndex;
         }
 
         private void DrawPreview()
@@ -446,7 +496,7 @@ namespace QJX.CodexTuanjieBridge.Editor
                     "安装/更新 Tuanjie Codely Skills",
                     "将从本仓库 main 分支获取五个公开 Skill，并安装到：\n" +
                     _skillRoot + "\n\n" + skillList +
-                    "\n\n已有非本工具文件的 Skill 目录会拒绝覆盖。",
+                    "\n\n无法识别为同名旧 Skill 的文件会拒绝覆盖；识别到旧版 Skill 时会保留迁移备份。",
                     "安装/更新",
                     "取消"))
             {
