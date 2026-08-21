@@ -1,6 +1,6 @@
 # 安装与设置
 
-本指南是本仓库唯一的完整安装入口，用于让支持本地 MCP STDIO 的 Agent 连接团结 Editor，不要求使用 TuanjieAI。普通用户不需要克隆或下载整个仓库；前置条件由用户准备，随后为当前 Agent 安装五个 Skill、为团结项目安装 EditorWindow UPM 包，再选择用户级全局或当前项目配置。一次只使用一个团结项目时默认用户级全局，多项目并行时使用当前项目范围；PowerShell 只用于批量项目、脚本化或 CI。各客户端的具体文件位置和状态判断见[多 Agent 配置](agent-configurations.md)。
+本指南是本仓库唯一的完整安装入口，用于让支持本地 MCP STDIO 的 Agent 连接团结 Editor，不要求使用 TuanjieAI。普通用户不需要克隆或下载整个仓库；前置条件由用户准备，随后为当前 Agent 安装五个 Skill、为团结项目安装 EditorWindow UPM 包，再选择用户级全局或当前项目配置。一次只使用一个团结项目时默认用户级全局，多项目并行时使用当前项目范围；PowerShell 只用于批量项目、脚本化或 CI。客户端路径、刷新方式和手动回退见[客户端参考与手动回退](agent-configurations.md)。
 
 ## 1. 前置条件
 
@@ -19,7 +19,7 @@
        & $cli --version
 
    也可以参考 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。
-4. 安装至少一个支持本地 MCP STDIO 和 Agent Skills 的客户端，在其中打开当前团结项目并完成工作区/目录信任。Agent 可以在具备桌面操作能力时帮你定位或打开项目；出现信任、访问权限或受保护操作弹窗时，由用户在客户端界面确认。常用客户端的打开和信任方法见[多 Agent 配置](agent-configurations.md)。Codex、Claude Code、Cursor、Qoder 和 WorkBuddy 都要安装本仓库的五个 Skill，再用 EditorWindow 配置各自的 MCP 入口。
+4. 安装至少一个支持本地 MCP STDIO 和 Agent Skills 的客户端，在其中打开当前团结项目并完成工作区/目录信任。Agent 可以在具备桌面操作能力时帮你定位或打开项目；出现信任、访问权限或受保护操作弹窗时，由用户在客户端界面确认。常用客户端的打开和信任方法见[客户端参考与手动回退](agent-configurations.md)。Codex、Claude Code、Cursor、Qoder 和 WorkBuddy 都要安装本仓库的五个 Skill，再用 EditorWindow 配置各自的 MCP 入口。
 
 Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill、EditorWindow 或 `tuanjie` MCP。
 

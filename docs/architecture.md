@@ -60,7 +60,7 @@ CodelyCLI 是连接宿主和 MCP 进程，不等同于独立 Unity CLI。Codely 
 
 ## 配置层级
 
-Skill 是通用行为规则，可以安装到支持 Skill 的用户级目录并复用。MCP server 的 args 包含 `--unity-project-path`，必须指向具体项目。EditorWindow 默认用户级全局配置以减少单项目首次接入步骤，但这个静态条目只能指向最后配置的一个项目；多个项目同时使用时选择当前项目范围。完整路径和示例见[多 Agent 配置](agent-configurations.md)。
+Skill 是通用行为规则，可以安装到支持 Skill 的用户级目录并复用。MCP server 的 args 包含 `--unity-project-path`，必须指向具体项目。EditorWindow 默认用户级全局配置以减少单项目首次接入步骤，但这个静态条目只能指向最后配置的一个项目；多个项目同时使用时选择当前项目范围。手动路径和回退示例见[客户端参考与手动回退](agent-configurations.md)。
 
 PowerShell 模块只处理 Codex 项目 TOML；EditorWindow 通过五个显式客户端适配器处理 TOML 或 JSON/JSONC。已有 `tuanjie` 时，EditorWindow 只替换 `--unity-project-path` 后面的字符串，其他字节保持不变；缺少条目时才最小插入。写入前检查预览是否过期并创建恢复备份，写入后执行字节边界和语义双重校验。
 

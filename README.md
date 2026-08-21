@@ -18,7 +18,7 @@
 
 任意支持本地 STDIO 的 Agent → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 
-详见 [架构说明](docs/architecture.md)、[安装与设置](docs/setup-guide.md)、[多 Agent 配置](docs/agent-configurations.md) 和 [排错指南](docs/troubleshooting.md)。
+详见 [架构说明](docs/architecture.md)、[安装与设置](docs/setup-guide.md)、[客户端参考与手动回退](docs/agent-configurations.md) 和 [排错指南](docs/troubleshooting.md)。
 
 ## EditorWindow 支持的配置范围
 
@@ -30,7 +30,7 @@
 | Qoder | `~/.qoder/settings.json` | `<ProjectRoot>/.qoder/settings.local.json` |
 | WorkBuddy | `~/.workbuddy/mcp.json` | `<ProjectRoot>/.workbuddy/mcp.json` |
 
-打开 `Window/Tuanjie Codely Agent Setup` 选择客户端和范围。已有 `tuanjie` 条目时，窗口只替换 `--unity-project-path` 后面的路径字符串，其他配置、注释、顺序和空白逐字节保持；缺少条目时才新增最小配置。所有配置都必须指向当前项目的规范化绝对路径。完整状态判断和安全边界见 [多 Agent 配置](docs/agent-configurations.md)。
+打开 `Window/Tuanjie Codely Agent Setup` 选择客户端和范围。已有 `tuanjie` 条目时，窗口只替换 `--unity-project-path` 后面的路径字符串，其他配置、注释、顺序和空白逐字节保持；缺少条目时才新增最小配置。所有配置都必须指向当前项目的规范化绝对路径。手动回退和客户端路径见[客户端参考与手动回退](docs/agent-configurations.md)。
 
 ## 安装 EditorWindow UPM 包
 
