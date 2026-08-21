@@ -1,65 +1,124 @@
 # 安装与设置
 
-本流程用于让 Codex 直接连接团结 Editor，不要求使用 TuanjieAI。它只覆盖团结 Editor + Codely Bridge；Unity 官方 Editor 项目请使用对应的 Unity MCP 工作流。
+本指南是本仓库唯一的完整安装入口，用于让 Codex 直接连接团结 Editor，不要求使用 TuanjieAI。前置条件由用户准备；完成前置条件后，可以选择 Agent 主导接入、手动 EditorWindow 或 PowerShell 批量配置三种入口，三者不要连续执行。
 
-## 1. 准备团结项目
+## 1. 前置条件
 
-确认项目根包含 Assets、Packages 和 ProjectSettings，ProjectVersion.txt 同时有团结版本字段，并在 Package Manager 安装与 Editor 版本匹配的 cn.tuanjie.codely.bridge；按[官方 Codely Bridge 安装流程](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)打开团结项目，Codely Bridge 会随 Editor 自动加载并初始化，无需单独启动 Bridge。
+以下项目外部条件需要先准备好，Agent 不会替你安装或修复：
 
-Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill 或 tuanjie MCP。
+1. 安装与项目版本匹配的团结 Editor，并确认项目根包含 `Assets`、`Packages`、`ProjectSettings`，`ProjectVersion.txt` 包含团结版本字段。
+2. 按[官方 Codely Bridge 安装流程](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)在团结 Package Manager 安装与 Editor 版本匹配的 `cn.tuanjie.codely.bridge`，然后打开目标团结项目；Bridge 会随 Editor 自动加载并初始化，无需单独启动 Bridge。
+3. 安装 Node.js LTS（自带 npm），在 PowerShell 安装 CodelyCLI：
 
-## 2. 准备 CodelyCLI
+       npm install -g @unity-china/codely-cli
 
-先安装 Node.js LTS（自带 npm），在 PowerShell 中运行以下命令安装 CodelyCLI：
+   找到 `codely.cmd` 的绝对路径并验证版本：
 
-    npm install -g @unity-china/codely-cli
+       $cli = (Get-Command codely.cmd -ErrorAction Stop).Source
+       $cli
+       & $cli --version
 
-安装完成后，用下面的命令找到 codely.cmd 的绝对路径并验证版本：
+   也可以参考 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。
+4. 安装 Codex，在其中打开并信任当前团结项目目录。
 
-    $cli = (Get-Command codely.cmd -ErrorAction Stop).Source
-    $cli
-    & $cli --version
+Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill、EditorWindow 或 `tuanjie` MCP。
 
-记录 `$cli` 输出的绝对路径，供 EditorWindow 或 PowerShell 配置入口使用。也可以参考 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。
+## 2. Agent 主导的项目接入（推荐）
 
-然后按 CodelyCLI 实际帮助确认 serve unity-mcp --stdio 支持的参数。项目路径必须使用目标团结项目的规范化绝对路径。
+完成前置条件后，把下面的提示发送给 Codex。Agent 会在一次接入流程中完成 Skill、EditorWindow 包、项目 `config.toml` 和验证；它不会重复安装前置条件中的 Bridge 或 CodelyCLI。
 
-## 3. 首次设置：EditorWindow（推荐）
+    请使用本仓库的 tuanjie-codely-bridge 工作流，在当前工作区完成一次项目接入。前置条件（团结 Editor、Codely Bridge、CodelyCLI 和 Codex）已由我准备好。
 
-在团结 Package Manager 中选择 Add package from git URL，使用：
+    约束：
+    - 只配置当前项目，不写用户级全局 MCP 配置；Unity 官方 Editor 立即停止。
+    - 允许安装本仓库的全局 Skill，并允许为当前项目加入本仓库的 EditorWindow UPM 包；除此之外不要改动无关依赖。
+    - 不安装或替换 Codely Bridge，不启动长期驻留的 MCP 服务，不输出 token、端口、descriptor 内容或其他凭据。
+    - 修改文件前先确认规范化绝对项目路径；修改 Packages/manifest.json 或 .codex/config.toml 前分别创建 .bak 备份。
 
-    https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge.git?path=/editor-package
+    请按顺序执行：
+    1. 定位本仓库根目录，将 skills/tuanjie-codely-bridge 安装到用户级 Codex Skill 目录（优先使用 CODEX_HOME，否则使用 %USERPROFILE%\.codex\skills\tuanjie-codely-bridge）。如果当前会话不会动态加载新 Skill，安装后说明需要重新打开一次 Codex 对话。
+    2. 检查当前项目 Packages/manifest.json 是否已有 cn.qjx.codex-codely-setup；没有时只添加这一项，使用 https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge.git?path=/editor-package，保留其他依赖并备份 manifest.json。不要手工改 packages-lock.json，等待团结 Editor 完成导入、编译和 Domain Reload。
+    3. 从 EditorPrefs、CODELY_CLI_PATH、PATH 或用户提供的路径定位 codely.cmd，运行 --version，并确认 CLI 路径是绝对路径。
+    4. 使用仓库 scripts/setup-project.ps1 或等价的安全合并逻辑，生成当前项目的 .codex/config.toml；已有配置需要变化时先备份为 config.toml.bak，只更新 [mcp_servers.tuanjie]，保留其他 MCP 配置。
+    5. 重新读取 manifest、EditorWindow 包状态和 config.toml，运行 codex mcp list 确认 tuanjie server 已注册；如当前会话具备实际 MCP 工具，再执行只读连接检查并核对 MCP 项目根与工作区一致。
+    6. 最后报告：Skill 安装路径、EditorWindow 包是否新增、项目路径、CodelyCLI 路径和版本、config.toml 是否新建/更新、备份路径、MCP 注册状态、实际连接验证和未完成项目。
 
-也可以将 editor-package 作为本地包引用。打开 Window/Tuanjie Codex Setup，然后：
+Agent 接入流程中，EditorWindow 包是安装结果和后续手动入口；`config.toml` 由 Agent 的安全合并逻辑写入，不需要再点击 EditorWindow 生成一次，也不需要随后重复运行 PowerShell。
 
-1. 点击刷新状态，确认 Editor、Bridge、CodelyCLI 和 MCP 项目根路径。
-2. 点击预览配置，检查将要写入的 .codex/config.toml。
-3. 点击生成/更新项目配置，确认目标路径和备份行为后写入。
+### Agent 完成标准
 
-首次手动设置不需要再运行 PowerShell；EditorWindow 已经完成同一项项目配置工作。
+Agent 必须分别说明：
 
-## 4. 批量/脚本化/CI：PowerShell
+- Skill 是否安装到用户级目录；
+- `cn.qjx.codex-codely-setup` 是否已加入当前项目；
+- `config.toml` 是否新建或更新，是否创建备份；
+- CodelyCLI 路径和版本是否验证；
+- `tuanjie` MCP 是否注册，实际 MCP 只读检查是否完成；
+- 没有执行的验证或需要用户手动完成的步骤。
 
-当需要批量处理多个团结项目、脚本化或 CI 时，使用 PowerShell 入口：
+## 3. 手动 EditorWindow 配置（不使用 Agent）
+
+这是单项目首次设置的可视化入口；不要在 Agent 接入完成后再重复执行。
+
+1. 在团结 Package Manager 选择 **Add package from git URL**，使用：
+
+       https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge.git?path=/editor-package
+
+   也可以将 `editor-package` 作为本地 UPM 包引用。
+2. 打开 `Window/Tuanjie Codex Setup`，点击“刷新状态”，确认项目、Bridge、CodelyCLI 和当前路径被正确识别。
+3. 点击“预览配置”，检查目标 `.codex/config.toml`。
+4. 点击“生成/更新项目配置”，确认目标路径和 `config.toml.bak` 行为后写入。
+
+窗口只负责项目配置和状态检查，不安装 Bridge，不启动 CodelyCLI 服务。首次手动设置不需要再运行 PowerShell。
+
+## 4. 手动安装全局 Skill（不使用 Agent）
+
+将 `skills/tuanjie-codely-bridge` 复制到用户级 Codex Skill 目录：
+
+    %USERPROFILE%\.codex\skills\tuanjie-codely-bridge
+
+如果设置了 `CODEX_HOME`，则使用 `%CODEX_HOME%\skills\tuanjie-codely-bridge`。安装后重新打开 Codex 对话，并使用 `$tuanjie-codely-bridge`。Skill 可以全局复用，但不会把某个项目路径固化为全局 MCP 配置。
+
+## 5. 批量/脚本化/CI：PowerShell
+
+只有需要批量处理多个团结项目、脚本化或 CI 时，才使用 PowerShell；它与 EditorWindow 是替代入口，不需要先后运行：
 
     .\scripts\setup-project.ps1 -ProjectPath "D:\TuanjieProjects\YourGame" -CodelyCliPath "C:\Tools\CodelyCLI\codely.cmd"
 
-如果 .codex/config.toml 已存在且需要更新，增加 -Force。脚本会写入 config.toml.bak；不加 Force 时不会覆盖已有差异配置。EditorWindow 和 PowerShell 二选一，不需要连续执行。
+如果 `.codex/config.toml` 已存在且需要更新，增加 `-Force`。脚本只更新 `[mcp_servers.tuanjie]`，覆盖前会创建 `config.toml.bak`；首次创建不需要 `-Force`。
 
-也可以手动复制 [config.toml.example](../templates/config.toml.example)，修改两处绝对路径。不要把 token、端口、descriptor 或真实用户凭据提交到仓库。
+## 6. `config.toml` 模板
 
-## 5. 安装全局 Skill
+将项目路径和 CodelyCLI 路径替换为实际绝对路径。Windows TOML 字符串中的反斜杠需要写成两个反斜杠：
 
-将 skills/tuanjie-codely-bridge 复制到用户级 Codex Skill 目录（通常为 ~/.codex/skills/tuanjie-codely-bridge），然后新开 Codex 对话。若使用其他 Skill 根目录，遵循当前 Codex 的 Skill 安装规则。
+    [mcp_servers.tuanjie]
+    command = "cmd.exe"
+    args = [
+        "/c",
+        "C:\\Tools\\CodelyCLI\\codely.cmd",
+        "serve",
+        "unity-mcp",
+        "--stdio",
+        "--unity-project-path",
+        "D:\\TuanjieProjects\\YourGame"
+    ]
+    startup_timeout_sec = 30
+    tool_timeout_sec = 120
+    enabled = true
 
-## 6. 让 Agent 自动完成本地连接配置
+完整模板位于 [templates/config.toml.example](../templates/config.toml.example)。不要把 token、端口、descriptor 或真实用户凭据提交到仓库。用户级 `~/.codex/config.toml` 可以读取，但静态 MCP 参数只能指向一个项目；多个团结项目应分别维护项目级 `.codex/config.toml`。
 
-安装 Skill 后，可以直接使用 [Agent 自动设置指南](agent-setup-guide.md) 中的提示，让 Agent 在当前项目根完成只针对该项目的 .codex/config.toml 配置和验证。Agent 不会把配置静态写入所有项目，也不会在 Bridge 缺失时擅自修改 manifest 或安装包。
+## 7. 连接与验证
 
-## 7. 连接 Codex
+安装和配置完成后：
 
-在项目根打开并信任 Codex。使用 codex mcp list 确认项目配置中的 tuanjie server 已加载；首次对象操作先发送 [只读连接检查](../prompts/readonly-connection-check.md)，确认根路径一致后再发送 [写入冒烟测试](../prompts/write-smoke-test.md)。
+1. 保持目标团结 Editor 打开，Bridge 会随 Editor 加载；不需要手动运行长期驻留的 CodelyCLI 服务。
+2. 在项目根执行 `codex mcp list`，确认 `tuanjie` server 已注册。这是配置检查，不等同于实际工具调用成功。
+3. 首次对象操作前发送 [只读连接检查](../prompts/readonly-connection-check.md)，核对 MCP 报告的项目根与当前工作区一致；通过后再发送 [写入冒烟测试](../prompts/write-smoke-test.md)。
+4. 如果 Editor 正在导入、编译、Domain Reload 或切换 Play Mode，先等待稳定，再进行 MCP 调用。
+
+Codex 首次调用 `tuanjie` MCP 时，会按项目配置自动启动 `codely.cmd serve unity-mcp --stdio`；服务由 Codex 会话管理，不需要每次点击连接。
 
 ## 8. 多项目使用
 
-Skill 可以全局复用；config.toml 不应静态指向一个项目后再假装适用于所有项目。为每个团结项目写入自己的 .codex/config.toml，或在切换项目时显式生成/审核该项目配置。
+Skill 和 EditorWindow 包可以复用；项目 `.codex/config.toml` 必须随项目分别生成或审核，不能把一个项目的 `--unity-project-path` 当作所有项目的全局配置。
