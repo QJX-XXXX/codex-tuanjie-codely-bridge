@@ -4,6 +4,20 @@
 
 本仓库面向选择 Codex 的团结项目团队，提供一条不依赖 TuanjieAI 的本地 Editor 连接路径。Codex 负责 Agent 交互，CodelyCLI 和 Codely Bridge 负责把 MCP 请求送入团结 Editor；团结 Editor 仍是项目运行和资源状态的事实来源。
 
+## Skill 路由层
+
+在连接链路之上，Skills 套件按任务分工：
+
+```text
+Tuanjie Workflows
+├─ Codely Bridge / CLI / MCP 配置与诊断
+├─ Editor Scene / Prefab / GameObject / 资源自动化
+├─ Package Manager 查询与解析验收
+└─ Bridge 自定义工具 API、注册与 schema 验证
+```
+
+`tuanjie-workflows` 只负责判断团结/Unity 边界和选择专项 Skill；专项 Skill 可以独立安装，并且各自重复执行项目根、Editor 类型和实际 schema 闸门。只修改普通代码、配置或文档时，使用文件级工具，不强制调用 MCP。
+
 ## 连接链路
 
     Codex
@@ -26,7 +40,7 @@ CodelyCLI 是连接宿主和 MCP 进程，不等同于独立 Unity CLI。Codely 
 - Packages/manifest.json 中的 cn.tuanjie.codely.bridge；
 - MCP 报告的项目根是否与工作区绝对路径一致。
 
-只有团结标识、团结 Editor、Bridge 和目标连接同时通过，才允许对象语义写入。Unity 官方 Editor 不走本仓库的 Codely Bridge 路由。
+只有团结标识、团结 Editor、Bridge、实际 schema 和目标连接根路径同时通过，才允许对象语义写入。Unity 官方 Editor 不走本仓库的 Codely Bridge 路由；不会因为用户提到 Codely Bridge 而把 Unity 项目切到团结流程。
 
 ## 配置层级
 
@@ -40,4 +54,4 @@ Window/Tuanjie Codex Setup 提供状态、CLI 选择、配置预览、显式生�
 
 ## 验证闭环
 
-对象操作遵循 state → action → re-read → save → re-read。C# 文件修改先等待资源刷新、编译和 Domain Reload，再读取 Console；有本次编译错误就停止依赖新程序集的 Scene/Prefab 操作。失败只对已确认幂等动作使用相同参数重试一次。
+对象操作遵循 state → action → re-read → save → re-read。C# 文件修改先等待资源刷新、编译和 Domain Reload，再读取 Console；有本次编译错误就停止依赖新程序集的 Scene/Prefab 操作。包变更还要等待解析并核对实际版本；自定义工具还要区分方法编译、Bridge 扫描、MCP schema 暴露和实际调用。失败只对已确认幂等动作使用相同参数重试一次。

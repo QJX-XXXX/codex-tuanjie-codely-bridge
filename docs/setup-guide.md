@@ -1,6 +1,6 @@
 # 安装与设置
 
-本指南是本仓库唯一的完整安装入口，用于让 Codex 直接连接团结 Editor，不要求使用 TuanjieAI。普通用户不需要克隆或下载整个仓库；前置条件由用户准备，后续只安装 GitHub 子路径中的 Skill 和 EditorWindow UPM 包，再生成项目配置。完成前置条件后，可以选择 Agent 主导接入、手动 EditorWindow 或 PowerShell 批量配置三种入口，三者不要连续执行。
+本指南是本仓库唯一的完整安装入口，用于让 Codex 直接连接团结 Editor，不要求使用 TuanjieAI。普通用户不需要克隆或下载整个仓库；前置条件由用户准备，后续安装 GitHub 子路径中的 Skill 套件和 EditorWindow UPM 包，再生成项目配置。完成前置条件后，可以选择 Agent 主导接入、手动 EditorWindow 或 PowerShell 批量配置三种入口，三者不要连续执行。
 
 ## 1. 前置条件
 
@@ -25,12 +25,16 @@ Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill、EditorW
 
 ## 2. Agent 主导的项目接入（推荐）
 
-完成前置条件后，把下面这段自包含提示发送给 Codex。提示已经给出 Skill 和 EditorWindow 的公开来源，不要求用户先下载本仓库；Agent 会在一次接入流程中完成 Skill、EditorWindow 包、项目 `config.toml` 和验证，也不会重复安装前置条件中的 Bridge 或 CodelyCLI。
+完成前置条件后，把下面这段自包含提示发送给 Codex。提示已经给出五个 Skill 和 EditorWindow 的公开来源，不要求用户先下载本仓库；Agent 会在一次接入流程中完成 Skill 套件、EditorWindow 包、项目 `config.toml` 和验证，也不会重复安装前置条件中的 Bridge 或 CodelyCLI。
 
-    请使用下面两个公开来源，为当前工作区完成一次团结项目接入。前置条件（团结 Editor、Codely Bridge、CodelyCLI 和 Codex）已由我准备好；不要克隆或下载整个仓库。
+    请使用下面的公开来源，为当前工作区完成一次团结项目接入。前置条件（团结 Editor、Codely Bridge、CodelyCLI 和 Codex）已由我准备好；不要克隆或下载整个仓库。
 
-    - Skill 来源：https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-codely-bridge
-    - EditorWindow UPM 来源：https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge.git?path=/editor-package
+    - https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-workflows
+    - https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-codely-bridge
+    - https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-editor-automation
+    - https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-package-management
+    - https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-codely-custom-tools
+    - EditorWindow UPM：https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge.git?path=/editor-package
 
     约束：
     - 只配置当前项目，不写用户级全局 MCP 配置；Unity 官方 Editor 立即停止。
@@ -39,12 +43,12 @@ Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill、EditorW
     - 修改文件前先确认规范化绝对项目路径；修改 Packages/manifest.json 或 .codex/config.toml 前分别创建 .bak 备份。
 
     请按顺序执行：
-    1. 使用 skill-installer 从上面的 GitHub Skill 子路径安装到用户级 Codex Skill 目录（优先使用 CODEX_HOME，否则使用 %USERPROFILE%\.codex\skills\tuanjie-codely-bridge）。如果当前会话不会动态加载新 Skill，安装后说明需要重新打开一次 Codex 对话。
+    1. 使用 skill-installer 逐个从上面的五个 GitHub Skill 子路径安装到用户级 Codex Skill 目录（优先使用 CODEX_HOME，否则使用 %USERPROFILE%\.codex\skills\）。如果当前会话不会动态加载新 Skill，安装后说明需要重新打开一次 Codex 对话；不要把仓库根目录当作 Skill。
     2. 检查当前项目 Packages/manifest.json 是否已有 cn.qjx.codex-codely-setup；没有时只添加上面给出的 EditorWindow UPM URL，保留其他依赖并备份 manifest.json。不要手工改 packages-lock.json，等待团结 Editor 完成导入、编译和 Domain Reload。
     3. 从 EditorPrefs、CODELY_CLI_PATH、PATH 或用户提供的路径定位 codely.cmd，运行 --version，并确认 CLI 路径是绝对路径。
     4. 使用已导入的 Window/Tuanjie Codex Setup 预览并生成当前项目的 .codex/config.toml；如果当前 Agent 无法操作 EditorWindow，则使用等价的安全合并逻辑完成同一写入，不要求获取仓库脚本。已有配置需要变化时先备份为 config.toml.bak，只更新 [mcp_servers.tuanjie]，保留其他 MCP 配置。
     5. 重新读取 manifest、EditorWindow 包状态和 config.toml，运行 codex mcp list 确认 tuanjie server 已注册；如当前会话具备实际 MCP 工具，再执行只读连接检查并核对 MCP 项目根与工作区一致。
-    6. 最后报告：Skill 安装路径、EditorWindow 包是否新增、项目路径、CodelyCLI 路径和版本、config.toml 是否新建/更新、备份路径、MCP 注册状态、实际连接验证和未完成项目。
+    6. 最后报告：五个 Skill 各自的安装路径、EditorWindow 包是否新增、项目路径、CodelyCLI 路径和版本、config.toml 是否新建/更新、备份路径、MCP 注册状态、实际连接验证和未完成项目。
 
 Agent 接入流程中，EditorWindow 包是安装结果和后续手动入口；`config.toml` 由 Agent 的安全合并逻辑写入，不需要再点击 EditorWindow 生成一次，也不需要随后重复运行 PowerShell。
 
@@ -52,7 +56,7 @@ Agent 接入流程中，EditorWindow 包是安装结果和后续手动入口；`
 
 Agent 必须分别说明：
 
-- Skill 是否安装到用户级目录；
+- 五个 Skill 是否分别安装到用户级目录；
 - `cn.qjx.codex-codely-setup` 是否已加入当前项目；
 - `config.toml` 是否新建或更新，是否创建备份；
 - CodelyCLI 路径和版本是否验证；
@@ -76,11 +80,15 @@ Agent 必须分别说明：
 
 ## 4. 手动安装全局 Skill（不使用 Agent）
 
-使用 [skill-installer](https://github.com/openai/skills/tree/main/skills/.system/skill-installer) 从以下 GitHub 子路径安装，不要克隆整个仓库：
+使用 [skill-installer](https://github.com/openai/skills/tree/main/skills/.system/skill-installer) 从以下 GitHub 子路径逐个安装，不要克隆整个仓库：
 
+    https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-workflows
     https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-codely-bridge
+    https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-editor-automation
+    https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-package-management
+    https://github.com/QJX-XXXX/codex-tuanjie-codely-bridge/tree/main/skills/tuanjie-codely-custom-tools
 
-安装后重新打开 Codex 对话，并使用 `$tuanjie-codely-bridge`。Skill 可以全局复用，但不会把某个项目路径固化为全局 MCP 配置。
+安装后重新打开 Codex 对话，并使用 `$tuanjie-workflows` 作为入口；也可以显式使用某个专项 Skill。Skill 可以全局复用，但不会把某个项目路径固化为全局 MCP 配置。
 
 ## 5. 批量/脚本化/CI：PowerShell
 
