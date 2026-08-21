@@ -13,3 +13,9 @@ artifacts/
 *.xml
 *.bak
 *.tmp
+
+# Local-only planning and test material
+docs/superpowers/
+docs/validation.md
+tests/
+editor-package/Tests/
