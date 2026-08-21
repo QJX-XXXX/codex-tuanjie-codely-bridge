@@ -1,0 +1,11 @@
+interface:
+  display_name: "Tuanjie Editor Automation"
+  short_description: "Safely automate Tuanjie scenes, prefabs, assets, and scripts"
+  default_prompt: "Use $tuanjie-editor-automation to inspect, modify, re-read, save, and verify this Tuanjie Editor task."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "tuanjie"
+      description: "CodelyCLI MCP server connected to the target Tuanjie Editor project"
+policy:
+  allow_implicit_invocation: true
