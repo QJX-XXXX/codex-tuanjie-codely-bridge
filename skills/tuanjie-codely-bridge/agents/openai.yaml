@@ -1,0 +1,11 @@
+interface:
+  display_name: "Tuanjie Codely Bridge"
+  short_description: "Operate Tuanjie Editor safely through Codely Bridge"
+  default_prompt: "Use $tuanjie-codely-bridge to verify this Tuanjie project and operate its Editor safely."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "tuanjie"
+      description: "CodelyCLI MCP server connected to Codely Bridge"
+policy:
+  allow_implicit_invocation: true
