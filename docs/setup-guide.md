@@ -125,7 +125,7 @@ Agent 必须分别说明：
 
 1. 保持目标团结 Editor 打开，Bridge 会随 Editor 加载；不需要手动运行长期驻留的 CodelyCLI 服务。
 2. 在项目根执行 `codex mcp list`，确认 `tuanjie` server 已注册。这是配置检查，不等同于实际工具调用成功。
-3. 首次对象操作前发送 [只读连接检查](../prompts/readonly-connection-check.md)，核对 MCP 报告的项目根与当前工作区一致；通过后再发送 [写入冒烟测试](../prompts/write-smoke-test.md)。
+3. 首次对象操作前使用 `$tuanjie-workflows` 路由到相应专项 Skill；连接任务由 `$tuanjie-codely-bridge` 做只读项目根核对，Scene/Prefab/组件任务由 `$tuanjie-editor-automation` 按读取 → 最小动作 → 重读 → 保存 → 再读闭环执行。
 4. 如果 Editor 正在导入、编译、Domain Reload 或切换 Play Mode，先等待稳定，再进行 MCP 调用。
 
 Codex 首次调用 `tuanjie` MCP 时，会按项目配置自动启动 `codely.cmd serve unity-mcp --stdio`；服务由 Codex 会话管理，不需要每次点击连接。

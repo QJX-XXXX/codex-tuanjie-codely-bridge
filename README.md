@@ -53,12 +53,9 @@ Codex → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 
 完整安装、Agent 主导接入、EditorWindow、PowerShell、`config.toml` 和验证步骤统一见[安装与设置](docs/setup-guide.md)。普通用户只需按 GitHub 子路径安装 Skill 套件和 EditorWindow UPM 包，不需要克隆或下载整个仓库。
 
-## Agent 提示
+## Agent 规则
 
-- [只读连接检查](prompts/readonly-connection-check.md)
-- [写入冒烟测试](prompts/write-smoke-test.md)
-- [连接诊断](prompts/diagnose-connection.md)
-- [团结规则片段](templates/AGENTS.tuanjie-snippet.md)
+任务路由、连接诊断、Editor 写入闭环和自定义工具验收已整合到五个 Skill；项目代理补充规则见[团结规则片段](templates/AGENTS.tuanjie-snippet.md)。
 
 ## 许可证
 
