@@ -1,0 +1,6 @@
+interface:
+  display_name: "Tuanjie Workflows"
+  short_description: "Route Tuanjie Editor work to the right Codely skill"
+  default_prompt: "Use $tuanjie-workflows to identify this Tuanjie task and route it to the correct verified workflow."
+policy:
+  allow_implicit_invocation: true
