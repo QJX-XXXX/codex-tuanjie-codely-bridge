@@ -1,0 +1,11 @@
+interface:
+  display_name: "Tuanjie Codely Custom Tools"
+  short_description: "Build and verify project-specific Codely Bridge tools"
+  default_prompt: "Use $tuanjie-codely-custom-tools to design or verify this project-specific Bridge tool against the current Tuanjie MCP schema."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "tuanjie"
+      description: "CodelyCLI MCP server used to discover and invoke verified Bridge custom tools"
+policy:
+  allow_implicit_invocation: true
