@@ -14,19 +14,8 @@ Codely CLI 支持安装一个独立 Skill 目录，例如 `codely skills install
 
 官方参考：[Codely Skills](https://codely-docs.tuanjie.cn/features-introduction/skills-experimental/)。
 
-## Bridge 自定义工具
+## Bridge 边界
 
-Codely Bridge 可以把项目中的静态 C# 方法注册为自定义工具。自定义工具通常由 `CustomToolAttribute` 描述名称和用途，并通过固定参数对象接收输入；具体注册方式和签名以当前 Bridge 版本及项目代码为准。
-
-使用自定义工具时：
-
-1. 先列出当前会话实际暴露的 `tuanjie` MCP schema，确认 `execute_custom_tool` 或等价工具真实存在。
-2. 只使用 schema 中出现的工具名、参数和返回约定；文档示例、Skill 文本、历史会话和用户口述都不能替代 schema。
-3. 工具未暴露、参数不匹配或 MCP 根路径未核对时，只做只读诊断并停止。
-4. 自定义工具会修改 Scene、Prefab、GameObject、组件或资源时，仍遵循主 Skill 的读取 → 最小动作 → 重读 → 保存 → 再读契约。
+Bridge 随团结 Editor 加载和初始化；Skill 安装、MCP 注册和实际 Editor 连接是三个不同状态。自定义工具的 API、注册、schema 发现和调用由 `tuanjie-codely-custom-tools` 负责；本 Skill 只判断连接前提是否成立。
 
 官方参考：[Codely Bridge 自定义](https://codely-docs.tuanjie.cn/using-codely/codely-bridge/)。
-
-## 自定义工具的 Skill 文档
-
-如果项目新增了 Bridge 自定义工具，应为该工具维护单独的 Skill 文档，至少说明：何时使用、准确工具名、参数结构、返回字段和一个最小调用示例。文档只解释能力，不代替当前 MCP schema；修改 Skill 或工具注册后，先 reload 或开启新会话，再重新发现工具并核对项目根。
