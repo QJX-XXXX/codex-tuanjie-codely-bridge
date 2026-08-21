@@ -4,7 +4,7 @@
 
 ## 1. 准备团结项目
 
-确认项目根包含 Assets、Packages 和 ProjectSettings，ProjectVersion.txt 同时有团结版本字段，并在 Package Manager 安装 cn.tuanjie.codely.bridge。打开 `Window/Tuanjie Codex Setup` 点击“刷新状态”，看到“Codely Bridge=已安装”和“Bridge descriptor=已存在”，且 Bridge 窗口显示 Connected/Ready，即可判断连接正常。
+确认项目根包含 Assets、Packages 和 ProjectSettings，ProjectVersion.txt 同时有团结版本字段，并在 Package Manager 安装与 Editor 版本匹配的 cn.tuanjie.codely.bridge；按[官方 Codely Bridge 安装指南](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)打开 Bridge 自带的状态窗口，确认状态为 `Connected/Ready`。
 
 Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill 或 tuanjie MCP。
 
@@ -17,6 +17,7 @@ Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill 或 tuanj
 安装完成后，用下面的命令找到 codely.cmd 的绝对路径并验证版本：
 
     $cli = (Get-Command codely.cmd -ErrorAction Stop).Source
+    $cli
     & $cli --version
 
 记录 `$cli` 输出的绝对路径，供 EditorWindow 或 PowerShell 配置入口使用。也可以参考 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。

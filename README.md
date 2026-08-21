@@ -22,8 +22,8 @@ Codex → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 ## 前置条件
 
 1. 安装与项目版本匹配的团结 Editor。
-2. 在团结 Package Manager 安装 Codely Bridge；打开 `Window/Tuanjie Codex Setup` 点击“刷新状态”，看到“Codely Bridge=已安装”和“Bridge descriptor=已存在”，且 Bridge 窗口显示 Connected/Ready，即可判断连接正常。
-3. 先安装 Node.js LTS（自带 npm），在 PowerShell 执行 `npm install -g @unity-china/codely-cli` 安装 CodelyCLI；再执行 `$cli = (Get-Command codely.cmd -ErrorAction Stop).Source; & $cli --version`，把 `$cli` 输出的绝对路径填入 EditorWindow 或配置脚本。更多安装背景见 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。
+2. 在团结 Package Manager 安装与 Editor 版本匹配的 Codely Bridge；按[官方 Codely Bridge 安装指南](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)打开 Bridge 自带的状态窗口，确认状态为 `Connected/Ready`。
+3. 先安装 Node.js LTS（自带 npm），在 PowerShell 执行 `npm install -g @unity-china/codely-cli` 安装 CodelyCLI；再执行 `$cli = (Get-Command codely.cmd -ErrorAction Stop).Source; $cli; & $cli --version`，把输出的绝对路径填入 EditorWindow 或配置脚本。更多安装背景见 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。
 4. 在 Codex 中打开并信任当前项目目录。
 
 ## 快速设置（首次使用）

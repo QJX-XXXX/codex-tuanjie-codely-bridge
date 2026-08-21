@@ -5,7 +5,7 @@
 ## 前置条件
 
 - 当前工作区是目标团结项目根，并且项目使用团结 Editor。
-- 团结 Editor 已打开；在 `Window/Tuanjie Codex Setup` 刷新后显示“Codely Bridge=已安装”和“Bridge descriptor=已存在”，且 Bridge 窗口显示 Connected/Ready。
+- 团结 Editor 已打开，Codely Bridge 已按[官方安装指南](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)安装，并在 Bridge 自带的状态窗口确认 `Connected/Ready`。
 - CodelyCLI 已安装；Agent 能从 EditorPrefs、CODELY_CLI_PATH、PATH 或用户提供的路径中找到 codely.cmd。
 - 当前项目已经在 Codex 中打开并信任。
 
