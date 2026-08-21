@@ -11,7 +11,7 @@
 - 目标是团结 Editor 项目，不是 Unity 官方 Editor 项目。
 - Skill 可以全局安装并复用，但 MCP 的项目路径不能静态地“一次配置覆盖所有项目”。
 - 当前版本只声明 Windows + PowerShell 验证，不宣称 macOS/Linux 兼容。
-- 不自动安装 Node.js、Codex、CodelyCLI 或 Codely Bridge，也不自动启动 MCP 服务。
+- 不自动安装 Node.js、Codex、CodelyCLI 或 Codely Bridge；设置阶段不启动 CodelyCLI MCP 服务，运行时由 Codex 按项目配置按需拉起，Bridge 则随团结 Editor 自动加载。
 
 ## 链路
 
@@ -19,10 +19,14 @@ Codex → CodelyCLI MCP/stdio → Codely Bridge → Tuanjie Editor
 
 详见 [架构说明](docs/architecture.md)、[安装与设置](docs/setup-guide.md) 和 [排错指南](docs/troubleshooting.md)。
 
+## 运行方式
+
+安装并配置完成后，打开团结项目即可让 Codely Bridge 随 Editor 自动加载和初始化；Codex 首次调用 `tuanjie` MCP 时，会按项目 `.codex/config.toml` 自动启动 CodelyCLI 的 stdio 服务，不需要每次点击连接，也不需要手动运行长期驻留的 MCP 服务。
+
 ## 前置条件
 
 1. 安装与项目版本匹配的团结 Editor。
-2. 在团结 Package Manager 安装与 Editor 版本匹配的 Codely Bridge；按[官方 Codely Bridge 安装指南](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)打开 Bridge 自带的状态窗口，确认状态为 `Connected/Ready`。
+2. 在团结 Package Manager 安装与 Editor 版本匹配的 Codely Bridge；按[官方 Codely Bridge 安装流程](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)打开团结项目，Codely Bridge 会随 Editor 自动加载并初始化，无需单独启动 Bridge。
 3. 先安装 Node.js LTS（自带 npm），在 PowerShell 执行 `npm install -g @unity-china/codely-cli` 安装 CodelyCLI；再执行 `$cli = (Get-Command codely.cmd -ErrorAction Stop).Source; $cli; & $cli --version`，把输出的绝对路径填入 EditorWindow 或配置脚本。更多安装背景见 [Codely CLI 安装说明](https://codely-docs.tuanjie.cn/learn/ai-programming-environment-setup-guide/)。
 4. 在 Codex 中打开并信任当前项目目录。
 

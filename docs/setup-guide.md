@@ -4,7 +4,7 @@
 
 ## 1. 准备团结项目
 
-确认项目根包含 Assets、Packages 和 ProjectSettings，ProjectVersion.txt 同时有团结版本字段，并在 Package Manager 安装与 Editor 版本匹配的 cn.tuanjie.codely.bridge；按[官方 Codely Bridge 安装指南](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)打开 Bridge 自带的状态窗口，确认状态为 `Connected/Ready`。
+确认项目根包含 Assets、Packages 和 ProjectSettings，ProjectVersion.txt 同时有团结版本字段，并在 Package Manager 安装与 Editor 版本匹配的 cn.tuanjie.codely.bridge；按[官方 Codely Bridge 安装流程](https://codely-docs.tuanjie.cn/en/using-codely/codely-bridge-installation-guide/)打开团结项目，Codely Bridge 会随 Editor 自动加载并初始化，无需单独启动 Bridge。
 
 Unity 官方 Editor 项目不要使用本仓库的 Codely Bridge Skill 或 tuanjie MCP。
 
